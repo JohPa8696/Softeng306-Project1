@@ -1,86 +1,71 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Node {
-		private String name;
-		private int weight;
-		private ArrayList<Node> children= new ArrayList<Node> ();
-		private ArrayList<Node> dependencies= new ArrayList<Node>();
-		private ArrayList<Integer> weightOfDepencies= new ArrayList<Integer>();
-		private int processor;
-		private int finishTime;
-		private int startTime;
 		
-		public Node(String name,int weight){
-			this.weight=weight;
+		private String name;
+		private int weight=0;
+		private int index;											/* Index of node in the main array list*/
+		private HashMap<Node,Integer> parents= new HashMap<>();		/* Parents node and cost of communication from parent nodes*/
+		private ArrayList<Node> children= new ArrayList<Node>();    /* Contains reference to children node*/
+		private int processor;										/* The processor that the node(i.e task) is assigned to*/
+		private int finishTime;										/* Finish time of the node*/
+		private int startTime;										/* Time when node is being executed*/
+		
+		/**
+		 * 
+		 */
+		public Node(String name){
 			this.name=name;
 		}
-
+		
 		public String getName() {
 			return name;
 		}
-
 		public void setName(String name) {
 			this.name = name;
 		}
-
 		public int getWeight() {
 			return weight;
 		}
-
 		public void setWeight(int weight) {
 			this.weight = weight;
 		}
-
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		public HashMap<Node, Integer> getParents() {
+			return parents;
+		}
+		public void setParents(Node parent, Integer weight) {
+			this.parents.put(parent, weight);
+		}
 		public ArrayList<Node> getChildren() {
 			return children;
 		}
-
 		public void setChildren(Node child) {
 			this.children.add(child);
 		}
-
-		public ArrayList<Node> getDependencies() {
-			return dependencies;
-		}
-
-		public void setDependencies(Node dependency) {
-			this.dependencies.add(dependency);
-		}
-		
-		public ArrayList<Integer> getWeightOfDepencies() {
-			return weightOfDepencies;
-		}
-
-		public void setWeightOfDepencies(int weight) {
-			this.weightOfDepencies.add(weight);
-		}
-
 		public int getProcessor() {
 			return processor;
 		}
-
 		public void setProcessor(int processor) {
 			this.processor = processor;
 		}
-
 		public int getFinishTime() {
 			return finishTime;
 		}
-
 		public void setFinishTime(int finishTime) {
 			this.finishTime = finishTime;
 		}
-
 		public int getStartTime() {
 			return startTime;
 		}
-
 		public void setStartTime(int startTime) {
 			this.startTime = startTime;
 		}
 		
-
-
-
-
 }
