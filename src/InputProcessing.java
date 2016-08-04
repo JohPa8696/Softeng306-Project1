@@ -78,7 +78,7 @@ public class InputProcessing {
 		}
 		
 		/**
-		 * Check if the node with 'nodeName' exists
+		 * Check if the node with 'nodeName' is new
 		 * @param nodeName
 		 * @return boolean
 		 */
