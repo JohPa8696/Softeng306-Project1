@@ -37,7 +37,7 @@ public class Algorithm {
 		int latestStartTimeFromParent = 0;
 		int traversalTime = 0;
 		HashMap<Node, Integer> parent = node.getParents();
-		for (HashMap.Entry<Node, Integer> entry : parent.entrySet()){
+		for (Map.Entry<Node, Integer> entry : parent.entrySet()){
 			if (entry.getKey().getProcessor() != assignedProc){
 			
 			}
