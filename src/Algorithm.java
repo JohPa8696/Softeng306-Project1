@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 public class Algorithm {
@@ -10,9 +13,17 @@ public class Algorithm {
 		double f = g+h;
 		
 	}
-	public int getLatestStartTime(){
+	public int getLatestStartTime(Node node, int assignedProc){
 		int latestStartTimeFromParent = 0;
 		int traversalTime = 0;
+		HashMap<Node, Integer> parent = node.getParents();
+		for (HashMap.Entry<Node, Integer> entry : parent.entrySet()){
+			if (entry.getKey().getProcessor() != assignedProc){
+			
+			}
+		}
+		
+			
 		
 		return latestStartTimeFromParent;
 	}
