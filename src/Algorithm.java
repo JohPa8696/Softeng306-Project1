@@ -20,6 +20,14 @@ public class Algorithm {
 		availableNodeList.add(node);
 	}
 	public void removeFromAvailable(Node node){
-
+		int i = 0;
+		for (Node availableNode:availableNodeList){
+			if (node.getIndex() == availableNode.getIndex()){
+				availableNodeList.remove(i);
+				break;
+			}else{
+				i++;
+			}
+		}
 	}
 }
