@@ -1,7 +1,11 @@
+package main;
+import node.Node;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import input_processor.InputProcessor;
 
 public class Main {
 	
@@ -15,7 +19,7 @@ public class Main {
 		//String fileName=args[0];
 		int numProc=2;
 		String fileName="input.dot";
-		InputProcessing ip=new InputProcessing(fileName);
+		InputProcessor ip=new InputProcessor(fileName);
 		ip.processInput();
 		list=ip.getListOfNodes();
 		map=ip.getMap();

@@ -1,16 +1,18 @@
+package input_processor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import node.Node;
 
-public class InputProcessing {
+public class InputProcessor {
 		
 		private String fileName;
 		private HashMap<String, Integer> map= new HashMap<>();				/*COMMENT HERE*/
 		private ArrayList<Node> listOfNodes= new ArrayList<Node>();			/*COMMENT HERE*/
 		
-		public InputProcessing(String fileName){
+		public InputProcessor(String fileName){
 			this.fileName=fileName;
 		}
 		

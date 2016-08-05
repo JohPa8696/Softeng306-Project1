@@ -1,7 +1,11 @@
+package branch_and_bound;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import node.Node;
 
 
 /**
@@ -11,9 +15,9 @@ import java.util.Set;
  * @Author Jack Wong
  * Date: 05/08/16
  */
-public class Algorithm {
+public class BranchAnBound {
 	private int numProc;
-	public Algorithm(int numProc){
+	public BranchAnBound(int numProc){
 		this.numProc = numProc;
 	}
 	

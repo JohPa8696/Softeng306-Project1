@@ -1,7 +1,11 @@
+package idastar;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import node.Node;
 
 
 /**
@@ -11,7 +15,7 @@ import java.util.Set;
  * @Author Jack Wong
  * Date: 04/08/16
  */
-public class Algorithm {
+public class IDAStar {
 	private ArrayList<Node> availableNodeList = new ArrayList<Node>();
 	
 	/**
