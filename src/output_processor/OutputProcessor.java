@@ -36,7 +36,6 @@ public class OutputProcessor {
 			} else {
 				String[] parts = line.split("\\s+");
 				Node n = null;
-				int i = 0;
 				for (String s : parts) {
 					if (s.matches("[a-zA-Z0-9]")) {
 						for (Node node : schedule) {
@@ -48,7 +47,7 @@ public class OutputProcessor {
 								+ n.getWeight() + ",Start=" + n.getStartTime()
 								+ ",Processor=" + n.getProcessor() + "];";
 						writer.println(line);
-
+						break;
 					}
 				}
 
