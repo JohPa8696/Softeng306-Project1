@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import node.Node;
 
-public class InputProcessor implements GraphReader{
+public class InputProcessor implements TaskReader{
 		
 		private String fileName;
 		private HashMap<String, Integer> map= new HashMap<>();					/*COMMENT HERE*/
@@ -127,6 +127,12 @@ public class InputProcessor implements GraphReader{
 		public ArrayList<Boolean> getNextAvailableNodes() {
 			// TODO Auto-generated method stub
 			return nextAvailableNodes;
+		}
+
+		@Override
+		public int getNumberOfProcessors() {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 		
 }
