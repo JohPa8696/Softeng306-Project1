@@ -39,8 +39,9 @@ public class OutputProcessor {
 				for (String s : parts) {
 					if (s.matches("[a-zA-Z0-9]")) {
 						for (Node node : schedule) {
-							if (node.getName().equals(parts[1])) {
+							if (node.getName().equals(s)) {
 								n = node;
+								break;
 							}
 						}
 						line = "\t" + parts[1] + "\t\t" + "[Weight="
