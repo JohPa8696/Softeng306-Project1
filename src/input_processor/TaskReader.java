@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import node.Node;
 
-public interface GraphReader {
+public interface TaskReader {
 
 	public ArrayList<Node> getGraph();
 	public ArrayList<Boolean> getNextAvailableNodes();
+	public int getNumberOfProcessors();
 	
 }
