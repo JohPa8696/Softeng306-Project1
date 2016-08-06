@@ -9,8 +9,9 @@ import node.Node;
 public class InputProcessor {
 		
 		private String fileName;
-		private HashMap<String, Integer> map= new HashMap<>();				/*COMMENT HERE*/
-		private ArrayList<Node> listOfNodes= new ArrayList<Node>();			/*COMMENT HERE*/
+		private HashMap<String, Integer> map= new HashMap<>();					/*COMMENT HERE*/
+		private ArrayList<Node> listOfNodes= new ArrayList<Node>();				/*COMMENT HERE*/
+		private ArrayList<Node> listOfAvailableNodes= new ArrayList<Node>();	/*COMMENT HERE*/
 		
 		public InputProcessor(String fileName){
 			this.fileName=fileName;
@@ -39,6 +40,7 @@ public class InputProcessor {
 						n.setWeight(weight);
 						listOfNodes.add(n);
 						map.put(name, index);
+						addAvaiableNode(n);
 						index++;
 					}else{
 						Node n= listOfNodes.get(map.get(name));
@@ -52,7 +54,8 @@ public class InputProcessor {
 						p=new Node(parentName);
 						listOfNodes.add(p);
 						map.put(parentName, index);
-						System.out.println();
+						addAvaiableNode(p);
+						//System.out.println();
 						index++;
 					}else{
 						p=listOfNodes.get(map.get(parentName));
@@ -67,6 +70,7 @@ public class InputProcessor {
 						index++;
 					}else{
 						c=listOfNodes.get(map.get(childName));
+						removeAvailableNode(c);
 					}
 					parts[2]=parts[2].substring(parts[2].lastIndexOf("=")+1,parts[2].length()-3);
 					int weight=Integer.parseInt(parts[2].trim());
@@ -91,6 +95,30 @@ public class InputProcessor {
 			}else{
 				return true;
 			}
+		}
+		
+		private void addAvaiableNode(Node n){
+			for(Node availNode : listOfAvailableNodes){
+				if (availNode.getName().equals(n.getName())){
+					return;
+				}
+				
+			}
+			listOfAvailableNodes.add(n);
+		}
+		
+		private void removeAvailableNode(Node n){
+			for(Node availNode : listOfAvailableNodes){
+				if (availNode.getName().equals(n.getName())){
+					listOfAvailableNodes.remove(availNode);
+					return;
+				}
+				
+			}
+		}
+		
+		public ArrayList<Node> getListOfAvailableNodes(){
+			return listOfAvailableNodes;
 		}
 		
 		public ArrayList<Node> getListOfNodes(){
