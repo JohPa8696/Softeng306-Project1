@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
-		ArrayList<Node> available; 
+		ArrayList<Boolean> available; 
 		HashMap<String, Integer> map= new HashMap<>();	
 		//int numProc=args[1];
 		//String fileName=args[0];
@@ -27,18 +27,17 @@ public class Main {
 		ip.processInput();
 		list=ip.getListOfNodes();
 		map=ip.getMap();
-		available=ip.getListOfAvailableNodes();
+		available=ip.getNextAvailableNodes();
 		
-		for(Node n: list){
+		for(Node n : list){
 			System.out.println(n.getName()+ " weight: " +n.getWeight());
 		}
 		for(String name: map.keySet()){
 			int index=map.get(name);
-			System.out.println(name +" index: " + index);
+			boolean isAvailable = available.get(index);
+			System.out.println(name +" index: " + index + " isAvailable: " + isAvailable);
 		}
-		for(Node n: available){
-			System.out.println(n.getName()+ " weight: " +n.getWeight() + " is available");
-		}
+
 		
 		OutputProcessor op = new OutputProcessor(fileName, list);
 		op.processOutput();
