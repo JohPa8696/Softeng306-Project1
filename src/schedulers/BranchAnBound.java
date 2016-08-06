@@ -1,4 +1,4 @@
-package branch_and_bound;
+package schedulers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
