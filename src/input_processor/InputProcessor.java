@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Scanner;
 import node.Node;
 
-public class InputProcessor {
+public class InputProcessor implements GraphReader{
 		
 		private String fileName;
 		private HashMap<String, Integer> map= new HashMap<>();					/*COMMENT HERE*/
 		private ArrayList<Node> listOfNodes= new ArrayList<Node>();				/*COMMENT HERE*/
-		private ArrayList<Node> listOfAvailableNodes= new ArrayList<Node>();	/*COMMENT HERE*/
+		private ArrayList<Boolean> nextAvailableNodes = new ArrayList<Boolean>();/*COMMENT HERE*/
 		
 		public InputProcessor(String fileName){
 			this.fileName=fileName;
@@ -55,7 +55,6 @@ public class InputProcessor {
 						listOfNodes.add(p);
 						map.put(parentName, index);
 						addAvaiableNode(p);
-						//System.out.println();
 						index++;
 					}else{
 						p=listOfNodes.get(map.get(parentName));
@@ -67,6 +66,8 @@ public class InputProcessor {
 						c=new Node(childName);
 						listOfNodes.add(c);
 						map.put(childName, index);
+						addAvaiableNode(c);
+						removeAvailableNode(c);
 						index++;
 					}else{
 						c=listOfNodes.get(map.get(childName));
@@ -98,28 +99,15 @@ public class InputProcessor {
 		}
 		
 		private void addAvaiableNode(Node n){
-			for(Node availNode : listOfAvailableNodes){
-				if (availNode.getName().equals(n.getName())){
-					return;
-				}
-				
-			}
-			listOfAvailableNodes.add(n);
+			int index = map.get(n.getName());
+			nextAvailableNodes.add(true);
 		}
 		
 		private void removeAvailableNode(Node n){
-			for(Node availNode : listOfAvailableNodes){
-				if (availNode.getName().equals(n.getName())){
-					listOfAvailableNodes.remove(availNode);
-					return;
-				}
-				
-			}
+			int index = map.get(n.getName());
+			nextAvailableNodes.add(index,false);
 		}
 		
-		public ArrayList<Node> getListOfAvailableNodes(){
-			return listOfAvailableNodes;
-		}
 		
 		public ArrayList<Node> getListOfNodes(){
 			return listOfNodes;
@@ -127,6 +115,18 @@ public class InputProcessor {
 		
 		public HashMap<String,Integer> getMap(){
 			return map;
+		}
+
+		@Override
+		public ArrayList<Node> getGraph() {
+			// TODO Auto-generated method stub
+			return listOfNodes;
+		}
+
+		@Override
+		public ArrayList<Boolean> getNextAvailableNodes() {
+			// TODO Auto-generated method stub
+			return nextAvailableNodes;
 		}
 		
 }
