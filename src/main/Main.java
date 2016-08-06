@@ -1,9 +1,12 @@
 package main;
 import node.Node;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import output_processor.OutputProcessor;
 
 import input_processor.InputProcessor;
 
@@ -11,7 +14,7 @@ public class Main {
 	
 	
 	
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Node> available; 
@@ -37,6 +40,8 @@ public class Main {
 			System.out.println(n.getName()+ " weight: " +n.getWeight() + " is available");
 		}
 		
+		OutputProcessor op = new OutputProcessor(fileName, list);
+		op.processOutput();
 	}
 	
 	
