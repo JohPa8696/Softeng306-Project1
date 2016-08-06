@@ -10,9 +10,9 @@ public class Node {
 		private int index;											/* Index of node in the main array list*/
 		private HashMap<Node,Integer> parents= new HashMap<>();		/* Parents node and cost of communication from parent nodes*/
 		private ArrayList<Node> children= new ArrayList<Node>();    /* Contains reference to children node*/
-		private int processor;										/* The processor that the node(i.e task) is assigned to*/
+		private int processor=0;										/* The processor that the node(i.e task) is assigned to*/
 		private int finishTime;										/* Finish time of the node*/
-		private int startTime;										/* Time when node is being executed*/
+		private int startTime=0;										/* Time when node is being executed*/
 		
 		/**
 		 * 
