@@ -108,30 +108,22 @@ public class InputProcessor implements TaskReader{
 			nextAvailableNodes.add(index,false);
 		}
 		
-		
-		public ArrayList<Node> getListOfNodes(){
-			return listOfNodes;
-		}
-		
 		public HashMap<String,Integer> getMap(){
 			return map;
 		}
 
 		@Override
 		public ArrayList<Node> getGraph() {
-			// TODO Auto-generated method stub
 			return listOfNodes;
 		}
 
 		@Override
 		public ArrayList<Boolean> getNextAvailableNodes() {
-			// TODO Auto-generated method stub
 			return nextAvailableNodes;
 		}
 
 		@Override
 		public int getNumberOfProcessors() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 		

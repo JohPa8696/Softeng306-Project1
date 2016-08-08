@@ -25,7 +25,7 @@ public class Main {
 		String fileName="input.dot";
 		InputProcessor ip=new InputProcessor(fileName);
 		ip.processInput();
-		list=ip.getListOfNodes();
+		list=ip.getGraph();
 		map=ip.getMap();
 		available=ip.getNextAvailableNodes();
 		
