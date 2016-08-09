@@ -39,8 +39,10 @@ public class SimpleScheduler implements Scheduler {
 	        		continue;
 	        	}else if(schedule.size()==0){
 	        		n.setStartTime(0);
+	        		n.setProcessor(1);
 	        	}else{
 	        		n.setStartTime(schedule.get(schedule.size()-1).getStartTime()+schedule.get(schedule.size()-1).getWeight());
+	        		n.setProcessor(1);
 	        	}
 	        	schedule.add(n);
 	            nodes.remove(i);
