@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 import output_processor.OutputProcessor;
 import schedulers.BranchAnBound;
+import schedulers.Scheduler;
+import schedulers.SimpleScheduler;
 import input_processor.InputProcessor;
 
 public class Main {
@@ -52,10 +54,17 @@ public class Main {
 			boolean isAvailable = available.get(index);
 			System.out.println(name +" index: " + index + " isAvailable: " + isAvailable);
 		}
+		
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing simple scheduler class");
+		SimpleScheduler ss = new SimpleScheduler(list);
+		ss.schedule();
+		
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println("Testing output processor class");
-		OutputProcessor op = new OutputProcessor(fileName, list);
+		OutputProcessor op = new OutputProcessor(fileName, ss.getSchedule());
 		op.processOutput();
+		
 		
 	}
 	
