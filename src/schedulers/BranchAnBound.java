@@ -20,11 +20,22 @@ public class BranchAnBound {
 	
 	private ArrayList<Node> list;
 	private int numProc;
+	private int[] maxProcAlloc;
+	private int[] currProcAlloc;
 	public BranchAnBound(int numProc,ArrayList<Node> list){
 		this.numProc = numProc;
 		this.list=list;
+		maxProcAlloc = new int[list.size()];
+		currProcAlloc = new int[list.size()];
+		for(int i = 0; i < maxProcAlloc.length; i++){
+			currProcAlloc[i] = 1;
+			if ((i+1)<= numProc){
+				maxProcAlloc[i] = i+1;
+			}else{
+				maxProcAlloc[i] = numProc;
+			}
+		}
 	}
-	
 	/**
 	 * Calulate the number of unique set for a given number of nodes
 	 * @param n
@@ -71,6 +82,42 @@ public class BranchAnBound {
     	return permutations;
     	
     }
+
+    
+    public void incAlloc(int index, int[] currentAlloc){
+    	if(index == 0){
+    		for(int i: currentAlloc){
+    			i = 1;
+    		}
+    		return;
+    	}else if (currentAlloc[index]+1 > maxProcAlloc[index]){
+    		currentAlloc[index] = 1;
+    		incAlloc(index - 1, currentAlloc);
+    	}else{
+    		currentAlloc[index] += 1;
+    	}
+    }
+    
+    public void testalloc(){
+    	do{
+    		for(int i : currProcAlloc){
+    			System.out.print(i);
+    		}System.out.println();
+    		incAlloc(currProcAlloc.length-1, currProcAlloc);
+    	}while(testProc());
+    	for(int i : currProcAlloc){
+    			System.out.print(i);
+    	}System.out.println();
+    }
+    public boolean testProc(){
+    	for(int i =0; i < maxProcAlloc.length; i ++){
+    		if(1 != currProcAlloc[i]){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
 	/**
 	 * @param nodelist
 	 * @return the final finish time of the list of a specific order and allocation.
