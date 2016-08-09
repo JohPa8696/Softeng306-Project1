@@ -33,6 +33,11 @@ public class Main {
 		available=ip.getNextAvailableNodes();
 		
 		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing allocation class");
+		BranchAnBound bnb = new BranchAnBound(4, ip.getGraph());
+		bnb.testalloc();
+		
+		System.out.println("-----------------------------------------------------------------");
 		System.out.println("Testing branch and bound permutation method");
 		BranchAnBound bab=new BranchAnBound(2,list);
 		ArrayList<ArrayList<Node>> permutations =bab.permutation();
