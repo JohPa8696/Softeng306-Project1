@@ -19,16 +19,16 @@ public class Main {
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Boolean> available; 
 		HashMap<String, Integer> map= new HashMap<>();	
-		/*Recieving command line arguments
-		int numProc=args[1]; 
-		String fileName=args[0];
-		*/
+		//Recieving command line arguments
+		//int numProc=Integer.parseInt(args[1].trim()); 
+		//String fileName=args[0];
+		
 		int numProc=2;
 		String fileName="largeinput.dot";
 		InputProcessor ip=new InputProcessor(fileName);
 		ip.processInput();
 		list=ip.getGraph();
-		map=ip.getMap();
+		map=ip.getMap();	
 		available=ip.getNextAvailableNodes();
 		
 		for(Node n : list){
