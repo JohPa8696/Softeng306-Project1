@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 import node.Node;
 
+/**
+ * 
+ * @author John + Vincent
+ */
 public class InputProcessor implements TaskReader{
 		
 		private String fileName;

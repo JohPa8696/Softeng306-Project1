@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import output_processor.OutputProcessor;
-
+import schedulers.BranchAnBound;
 import input_processor.InputProcessor;
 
 public class Main {
@@ -22,7 +22,6 @@ public class Main {
 		//Recieving command line arguments
 		//int numProc=Integer.parseInt(args[1].trim()); 
 		//String fileName=args[0];
-		
 		int numProc=2;
 		String fileName="largeinput.dot";
 		InputProcessor ip=new InputProcessor(fileName);
@@ -31,18 +30,33 @@ public class Main {
 		map=ip.getMap();	
 		available=ip.getNextAvailableNodes();
 		
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing branch and bound permutation method");
+		BranchAnBound bab=new BranchAnBound(2,list);
+		ArrayList<ArrayList<Node>> permutations =bab.permutation();
+		for(ArrayList<Node> al:permutations){
+			for(Node n: al){
+				System.out.print(n.getName());
+			}
+			System.out.println();
+		}
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing input processor class");
 		for(Node n : list){
 			System.out.println(n.getName()+ " weight: " +n.getWeight());
 		}
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing input processor class");
 		for(String name: map.keySet()){
 			int index=map.get(name);
 			boolean isAvailable = available.get(index);
 			System.out.println(name +" index: " + index + " isAvailable: " + isAvailable);
 		}
-
-		
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("Testing output processor class");
 		OutputProcessor op = new OutputProcessor(fileName, list);
 		op.processOutput();
+		
 	}
 	
 	
