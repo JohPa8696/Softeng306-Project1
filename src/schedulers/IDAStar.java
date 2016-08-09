@@ -12,15 +12,19 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Integer> procFinishTimes;
+	private int numProc;
+	private int fCutOff = 0;
+	private int nextCutOff = -1;
 
-	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int noProc) {
+	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
 
 		scheduledNodes = new ArrayList<Boolean>(dag.size());
 		Collections.fill(scheduledNodes, Boolean.FALSE);
 		
-		procFinishTimes = new ArrayList<Integer>(noProc);
+		this.numProc = numProc;
+		procFinishTimes = new ArrayList<Integer>(numProc);
 	}
 
 	@Override
@@ -29,22 +33,69 @@ public class IDAStar implements Scheduler {
 			if (nextAvailableNodes.get(i)) {
 
 				// get initial f cut off for starting node
-				int fCutoff = dag.get(i).getWeight() + getHValue(dag.get(i));
+				fCutOff= dag.get(i).getWeight() + getHValue(dag.get(i));
 				
 				boolean isSolved = false;
 				while (!isSolved){
-					isSolved = buildTree(dag.get(i), 1, fCutoff);
+					isSolved = buildTree(dag.get(i), 1);
 				}
 			}
 		}
 	}
 
-	private boolean buildTree(Node node, int pNo, int fCutoff) {
-		int g = getStartTime(node, pNo) + node.getWeight();
+	private boolean buildTree(Node node, int pNo) {
+		int nodeStartTime = getStartTime(node, pNo);
+		int g = nodeStartTime + node.getWeight();
 		int h = getHValue(node);
 		int f = g+h;
 		
-		return true;
+		// if greater than cut off, we only store the next cut off, no need to actually traverse it
+		if (f > fCutOff ){
+			if(f < nextCutOff || f == -1){
+				nextCutOff = f;
+			}
+			return false;
+		} else {
+			// TODO: add node to trail/path
+			node.setStartTime(nodeStartTime);
+			node.setFinishTime(g);
+			node.setProcessor(pNo);
+			
+			procFinishTimes.set(pNo-1, g);
+			
+			// TODO: remove from available
+			
+			if(node.getChildren().isEmpty() /*TODO: and no more avaiable, and trail size = num of nodes*/){
+				// TODO: copy solution to somewhere
+				return true;
+			} else {
+				for (Node child:node.getChildren()){
+					// TODO: check dependencies and add them to available
+				}
+				
+				boolean isSuccessful = false;
+				
+				for (int i = 0;i<nextAvailableNodes.size();i++){
+					if (nextAvailableNodes.get(i)){
+						for (int j = 1; j<=numProc; j++){
+							isSuccessful = buildTree(dag.get(i), j);
+						}
+					}
+				}
+				
+				// TODO: remove node from trail/path
+				
+				// TODO: reset start and finish times and proc number of this node...
+
+				for (Node child:node.getChildren()){
+					// TODO: set child availability to false
+				}
+				
+				// TODO: set current node to available
+				
+				return isSuccessful;
+			}
+		}
 	}
 
 	private int getStartTime(Node node, int pNo){
