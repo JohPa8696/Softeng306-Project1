@@ -13,12 +13,30 @@ public class NodeTemp {
 
 	private String name;
 	private int weight = -1;
-	private int index;											/* Index of node in the main array list*/
+	// TODO: For the index, if is not set during input processing, then need a map saying what name maps to what index
+	private int index = -1;	 /* Index of node in the main array list*/
 	private HashMap<Integer,Integer> parents= new HashMap<>();		/* Parents node (index) and cost of communication from parent nodes*/
 	private ArrayList<Integer> children= new ArrayList<>();    /* Contains reference to children node (index)*/
 	private int processor = -1;										/* The processor that the node(i.e task) is assigned to*/
 	private int finishTime = -1;										/* Finish time of the node*/
 	private int startTime = -1;
+	
+	public NodeTemp(String name) {
+		this.name = name;
+	}
+	
+	public NodeTemp(NodeTemp node){
+		this.name = node.getName();
+		this.weight = node.getWeight();
+		this.index = node.getIndex();
+		//this.parents = null;
+		this.parents = node.getParents();
+		//this.children = null;
+		this.children = node.getChildren();
+		this.processor = node.getProcessor();
+		this.finishTime = node.getFinishTime();
+		this.startTime = node.getStartTime();
+	}
 	
 	public String getName() {
 		return name;
