@@ -20,7 +20,7 @@ public class OutputProcessor {
 
 	public void processOutput() throws FileNotFoundException,
 			UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter("output.dot", "UTF-8");
+		PrintWriter writer = new PrintWriter(fileName.substring(0, fileName.length()-4)+"-output.dot", "UTF-8");
 
 		Scanner scan = new Scanner(new File(fileName));
 		while (scan.hasNext()) {
