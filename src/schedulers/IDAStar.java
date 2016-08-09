@@ -4,19 +4,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import node.Node;
+//import node.Node;
+import node.NodeTemp;
 
 public class IDAStar implements Scheduler {
 
-	private ArrayList<Node> dag;
+	private ArrayList<NodeTemp> dag;
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Integer> procFinishTimes;
+	
 	private int numProc;
 	private int fCutOff = 0;
 	private int nextCutOff = -1;
+	
+	private ArrayList<NodeTemp> bestSchedule;
+	private int bestFinishTime;
 
-	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
+	public IDAStar(ArrayList<NodeTemp> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
 
@@ -43,7 +48,7 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
-	private boolean buildTree(Node node, int pNo) {
+	private boolean buildTree(NodeTemp node, int pNo) {
 		int nodeStartTime = getStartTime(node, pNo);
 		int g = nodeStartTime + node.getWeight();
 		int h = getHValue(node);
@@ -69,7 +74,7 @@ public class IDAStar implements Scheduler {
 				// TODO: copy solution to somewhere
 				return true;
 			} else {
-				for (Node child:node.getChildren()){
+				for (int child:node.getChildren()){
 					// TODO: check dependencies and add them to available
 				}
 				
@@ -87,7 +92,7 @@ public class IDAStar implements Scheduler {
 				
 				// TODO: reset start and finish times and proc number of this node...
 
-				for (Node child:node.getChildren()){
+				for (int child:node.getChildren()){
 					// TODO: set child availability to false
 				}
 				
@@ -98,20 +103,20 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
-	private int getStartTime(Node node, int pNo){
+	private int getStartTime(NodeTemp node, int pNo){
 		int parentFinishTime = 0;
 		int traversalTime = 0;
-		Map<Node, Integer> parents = node.getParents();
+		Map<Integer, Integer> parents = node.getParents();
 		
-		for (Node parent : parents.keySet()){
-			if (parent.getProcessor()  != pNo){
+		for (int parent : parents.keySet()){
+			if (dag.get(parent).getProcessor() != pNo){
 				traversalTime = parents.get(parent);
 			}else{
 				traversalTime = 0;
 			}
 			
-			if (parentFinishTime < parent.getFinishTime() + traversalTime){
-				parentFinishTime = parent.getFinishTime() + traversalTime;
+			if (parentFinishTime < dag.get(parent).getFinishTime() + traversalTime){
+				parentFinishTime = dag.get(parent).getFinishTime() + traversalTime;
 			}
 
 			traversalTime = 0;
@@ -123,7 +128,7 @@ public class IDAStar implements Scheduler {
 		
 	}
 	
-	private int getHValue(Node node){
+	private int getHValue(NodeTemp node){
 		int totalRemainWeight = 0;
 		// TODO:can get num remaining by subtracting trail size by dag size
 		int numRemaining = 0;
@@ -133,7 +138,11 @@ public class IDAStar implements Scheduler {
 				numRemaining++;
 			}
 		}
-		return totalRemainWeight/numRemaining;
+		return totalRemainWeight/(numRemaining*numProc);
 		
+	}
+	
+	private boolean checkDependencies(NodeTemp node){
+		return true;
 	}
 }

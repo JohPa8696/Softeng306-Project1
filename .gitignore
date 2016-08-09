@@ -1,5 +1,7 @@
 /bin
-/.classpath
-/.project
-/.settings
 
+.settings/
+.project
+.classpath
+
+output.dot
