@@ -10,6 +10,8 @@ import node.NodeTemp;
 public class IDAStar implements Scheduler {
 
 	private ArrayList<NodeTemp> dag;
+	// TODO: extend the node class for IDA star (downcast?)
+	// TODO: also merge the two following masks as fields for the extended node
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Integer> procFinishTimes;
@@ -19,7 +21,7 @@ public class IDAStar implements Scheduler {
 	private int nextCutOff = -1;
 	
 	private ArrayList<NodeTemp> bestSchedule;
-	private int bestFinishTime;
+	private int bestFinishTime = -1;
 
 	public IDAStar(ArrayList<NodeTemp> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
 		this.dag = dag;
@@ -30,6 +32,8 @@ public class IDAStar implements Scheduler {
 		
 		this.numProc = numProc;
 		procFinishTimes = new ArrayList<Integer>(numProc);
+		
+		bestSchedule = new ArrayList<>(dag.size());
 	}
 
 	@Override
@@ -40,6 +44,9 @@ public class IDAStar implements Scheduler {
 				// get initial f cut off for starting node
 				fCutOff= dag.get(i).getWeight() + getHValue(dag.get(i));
 				
+				// reset procFinishTimes
+				Collections.fill(procFinishTimes, 0);
+				
 				boolean isSolved = false;
 				while (!isSolved){
 					isSolved = buildTree(dag.get(i), 1);
@@ -48,6 +55,13 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
+	/**
+	 * Recursive method to build and traverse the tree for determining the schedule.
+	 * It depends on a f cut-off value, which increments as each task builds.
+	 * @param node - the current node/task of the traversal
+	 * @param pNo - the assigned process number for the node/task
+	 * @return true if a schedule has been made
+	 */
 	private boolean buildTree(NodeTemp node, int pNo) {
 		int nodeStartTime = getStartTime(node, pNo);
 		int g = nodeStartTime + node.getWeight();
@@ -56,7 +70,7 @@ public class IDAStar implements Scheduler {
 		
 		// if greater than cut off, we only store the next cut off, no need to actually traverse it
 		if (f > fCutOff ){
-			if(f < nextCutOff || f == -1){
+			if(f < nextCutOff || nextCutOff == -1){
 				nextCutOff = f;
 			}
 			return false;
@@ -70,7 +84,9 @@ public class IDAStar implements Scheduler {
 			nextAvailableNodes.set(node.getIndex(), false);
 			
 			if(node.getChildren().isEmpty() /*TODO: and no more avaiable, and trail size = num of nodes*/){
-				// TODO: copy solution to somewhere
+				// TODO: copy solution to somewhere, store best time
+				// NOTE: another way to copy the schedule would be to make a less heavy Node class which only has
+				// can copy outside after buildTree finishes recursion, so long as i don't reset as going back up
 				return true;
 			} else {
 				for (int childIndex:node.getChildren()){
@@ -98,6 +114,8 @@ public class IDAStar implements Scheduler {
 				/*node.setStartTime(-1);
 				node.setFinishTime(-1);
 				node.setProcessor(-1);*/
+				
+				// FIXME: backtrack the procFinishTime
 
 				// set child availability to false
 				for (int childIndex:node.getChildren()){
@@ -112,6 +130,15 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
+	/**
+	 * Calculates the earliest start time for a given node and process number
+	 * The earliest start time will be the latest of two possible times:
+	 * 		- time based on parent tasks
+	 * 		- time based on the current processor task
+	 * @param node - the node/task
+	 * @param pNo - process number
+	 * @return integer of the earliest start time
+	 */
 	private int getStartTime(NodeTemp node, int pNo){
 		int parentFinishTime = 0;
 		int traversalTime = 0;
@@ -133,15 +160,24 @@ public class IDAStar implements Scheduler {
 		
 		int procFinishTime = procFinishTimes.get(pNo-1);
 		
+		// return the latest of the two times
 		return procFinishTime > parentFinishTime ? procFinishTime : parentFinishTime;
 		
 	}
 	
+	/**
+	 * Heuristic calculation for a given node
+	 * @param node - the node/task
+	 * @return integer value for the estimation
+	 */
 	private int getHValue(NodeTemp node){
 		int totalRemainWeight = 0;
-		// TODO: can keep track of num remaining as we do recursion, as private field
+		// NOTE: can keep track of num remaining as we do recursion, as private field
 		int numRemaining = 0;
 		for (int i=0; i<scheduledNodes.size(); i++){
+			// ignore the current node's weight
+			if (i == node.getIndex()) continue;
+			
 			if (!scheduledNodes.get(i)){
 				totalRemainWeight += dag.get(i).getWeight();
 				numRemaining++;
@@ -151,6 +187,11 @@ public class IDAStar implements Scheduler {
 		
 	}
 	
+	/**
+	 * Determines whether the dependencies for a given node/task has been resolved
+	 * @param node - the node/task
+	 * @return true if dependencies are resolved
+	 */
 	private boolean checkDependencies(NodeTemp node){
 		
 		boolean isResolved = true;
@@ -171,7 +212,6 @@ public class IDAStar implements Scheduler {
 	}
 	
 	public ArrayList<NodeTemp> getScheduleTemp() {
-		// TODO Auto-generated method stub
-		return null;
+		return bestSchedule;
 	}
 }
