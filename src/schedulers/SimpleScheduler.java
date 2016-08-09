@@ -6,9 +6,14 @@ import java.util.Set;
 
 import node.Node;
 
+/**
+ * Class: SimpleScheduler
+ * Description: Creates a schedule for a single processor only
+ * @author vincent
+ */
 public class SimpleScheduler implements Scheduler {
-	ArrayList<Node> nodes;
-	static ArrayList<Node> schedule = new ArrayList<Node>();
+	ArrayList<Node> nodes; // The DAG or input array
+	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule oroutput array
 	
 	public SimpleScheduler(ArrayList<Node> nodes){
 		this.nodes=nodes;
