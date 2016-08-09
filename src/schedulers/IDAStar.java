@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-//import node.Node;
+import node.Node;
 import node.NodeTemp;
 
 public class IDAStar implements Scheduler {
@@ -61,25 +61,28 @@ public class IDAStar implements Scheduler {
 			}
 			return false;
 		} else {
-			// TODO: add node to trail/path
+			// TODO: add node to trail/path...
 			node.setStartTime(nodeStartTime);
 			node.setFinishTime(g);
 			node.setProcessor(pNo);
 			
 			procFinishTimes.set(pNo-1, g);
-			
-			// TODO: remove from available
+			nextAvailableNodes.set(node.getIndex(), false);
 			
 			if(node.getChildren().isEmpty() /*TODO: and no more avaiable, and trail size = num of nodes*/){
 				// TODO: copy solution to somewhere
 				return true;
 			} else {
-				for (int child:node.getChildren()){
-					// TODO: check dependencies and add them to available
+				for (int childIndex:node.getChildren()){
+					// check dependencies of children, add them to available if they can be visited
+					boolean isResolved = checkDependencies(dag.get(childIndex));
+					if (isResolved){
+						nextAvailableNodes.set(childIndex, true);
+					}
 				}
-				
+
+				// begin recursion
 				boolean isSuccessful = false;
-				
 				for (int i = 0;i<nextAvailableNodes.size();i++){
 					if (nextAvailableNodes.get(i)){
 						for (int j = 1; j<=numProc; j++){
@@ -90,13 +93,19 @@ public class IDAStar implements Scheduler {
 				
 				// TODO: remove node from trail/path
 				
-				// TODO: reset start and finish times and proc number of this node...
+				// reset start and finish times and proc number of this node...
+				// not exactly necessary
+				/*node.setStartTime(-1);
+				node.setFinishTime(-1);
+				node.setProcessor(-1);*/
 
-				for (int child:node.getChildren()){
-					// TODO: set child availability to false
+				// set child availability to false
+				for (int childIndex:node.getChildren()){
+					nextAvailableNodes.set(childIndex, false);
 				}
 				
-				// TODO: set current node to available
+				// set current node to available as we traverse back up
+				nextAvailableNodes.set(node.getIndex(), true);
 				
 				return isSuccessful;
 			}
@@ -108,15 +117,15 @@ public class IDAStar implements Scheduler {
 		int traversalTime = 0;
 		Map<Integer, Integer> parents = node.getParents();
 		
-		for (int parent : parents.keySet()){
-			if (dag.get(parent).getProcessor() != pNo){
-				traversalTime = parents.get(parent);
+		for (int parentIndex : parents.keySet()){
+			if (dag.get(parentIndex).getProcessor() != pNo){
+				traversalTime = parents.get(parentIndex);
 			}else{
 				traversalTime = 0;
 			}
 			
-			if (parentFinishTime < dag.get(parent).getFinishTime() + traversalTime){
-				parentFinishTime = dag.get(parent).getFinishTime() + traversalTime;
+			if (parentFinishTime < dag.get(parentIndex).getFinishTime() + traversalTime){
+				parentFinishTime = dag.get(parentIndex).getFinishTime() + traversalTime;
 			}
 
 			traversalTime = 0;
@@ -130,7 +139,7 @@ public class IDAStar implements Scheduler {
 	
 	private int getHValue(NodeTemp node){
 		int totalRemainWeight = 0;
-		// TODO:can get num remaining by subtracting trail size by dag size
+		// TODO: can keep track of num remaining as we do recursion, as private field
 		int numRemaining = 0;
 		for (int i=0; i<scheduledNodes.size(); i++){
 			if (!scheduledNodes.get(i)){
@@ -143,6 +152,26 @@ public class IDAStar implements Scheduler {
 	}
 	
 	private boolean checkDependencies(NodeTemp node){
-		return true;
+		
+		boolean isResolved = true;
+
+		Map<Integer, Integer> parents = node.getParents();
+		
+		for (int parentIndex : parents.keySet()){
+			isResolved = scheduledNodes.get(parentIndex) && isResolved;
+			if (!isResolved) break;
+		}
+		
+		return isResolved;
+	}
+
+	@Override
+	public ArrayList<Node> getSchedule() {
+		return null;
+	}
+	
+	public ArrayList<NodeTemp> getScheduleTemp() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

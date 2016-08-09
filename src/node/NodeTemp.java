@@ -13,7 +13,7 @@ public class NodeTemp {
 
 	private String name;
 	private int weight = -1;
-	//private int index;											/* Index of node in the main array list*/
+	private int index;											/* Index of node in the main array list*/
 	private HashMap<Integer,Integer> parents= new HashMap<>();		/* Parents node (index) and cost of communication from parent nodes*/
 	private ArrayList<Integer> children= new ArrayList<>();    /* Contains reference to children node (index)*/
 	private int processor = -1;										/* The processor that the node(i.e task) is assigned to*/
@@ -32,12 +32,12 @@ public class NodeTemp {
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
-//	public int getIndex() {
-//		return index;
-//	}
-//	public void setIndex(int index) {
-//		this.index = index;
-//	}
+	public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	public HashMap<Integer, Integer> getParents() {
 		return parents;
 	}
