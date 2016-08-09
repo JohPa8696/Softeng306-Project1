@@ -46,9 +46,18 @@ public class InputProcessor implements TaskReader{
 				// Process lines that do not contain ">" characters, representing nodes
 				if(!line.contains(">")){
 					// Get names and weight of the nodes
-					String name = parts[0].trim();
-					parts[2]=parts[2].substring(parts[2].lastIndexOf("=")+1,parts[2].length()-3);
-					int weight=Integer.parseInt(parts[2].trim());
+					String name="";
+					int weight=0;
+					for(String subString: parts){
+						if(subString.equals("")){
+							continue;
+						}else if(!subString.contains(";")){
+							name=subString.trim();
+						}else{
+							subString=subString.substring(subString.lastIndexOf("=")+1,subString.lastIndexOf("]"));
+							weight=Integer.parseInt(subString.trim());
+						}
+					}
 					if(isNodeNew(name)){
 						// 	If the node is not in the list_of_nodes then create a new node and add to the list
 						Node n= new Node(name);
@@ -64,8 +73,21 @@ public class InputProcessor implements TaskReader{
 					}
 				// Process line that represent edges	
 				}else{
-					// Get the name of the parent node
-					String parentName=parts[0].substring(0, parts[0].indexOf(">")-2).trim();
+					// Get the name of the parent and child node
+					String parentName="";
+					String childName="";
+					int weight=0;
+					for(String subString: parts){
+						if(subString.equals("")){
+							continue;
+						}else if(!subString.contains(";")){
+							parentName=subString.substring(0, subString.indexOf(">")-2).trim();
+							childName=subString.substring(parts[0].indexOf(">")+1).trim();
+						}else{// Get the cost of communication
+							subString=subString.substring(subString.lastIndexOf("=")+1,subString.lastIndexOf("]"));
+							weight=Integer.parseInt(subString.trim());
+						}
+					}
 					Node p=null;
 					// If the parent node does not exist create a new node, otherwise get the parent node and assign to p
 					if(isNodeNew(parentName)){
@@ -77,8 +99,7 @@ public class InputProcessor implements TaskReader{
 					}else{
 						p=listOfNodes.get(map.get(parentName));
 					}
-					// Get the name of the child node
-					String childName=parts[0].substring(parts[0].indexOf(">")+1).trim();
+					// Get the child node
 					Node c=null;
 					// If the child node does not exist create a new node, otherwise get the child node and assign to c
 					if(isNodeNew(childName)){
@@ -91,10 +112,8 @@ public class InputProcessor implements TaskReader{
 					}else{
 						c=listOfNodes.get(map.get(childName));
 						removeAvailableNode(c);
-					}
-					// Get the cost of communication 
-					parts[2]=parts[2].substring(parts[2].lastIndexOf("=")+1,parts[2].length()-3);
-					int weight=Integer.parseInt(parts[2].trim());
+					} 
+					
 					//add the child node to the parent's list of children
 					p.setChildren(c);
 					//add the parent to the child's map of parent and 

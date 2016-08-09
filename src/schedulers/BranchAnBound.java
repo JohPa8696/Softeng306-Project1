@@ -26,7 +26,7 @@ public class BranchAnBound {
 	}
 	
 	/**
-	 * Calulate the number of unique set for a given number of nodes
+	 * Calulate the number of unique permutation for a given number of nodes
 	 * @param n
 	 * @return
 	 */
@@ -38,7 +38,13 @@ public class BranchAnBound {
         }
         return fact;
 	}
-
+	/**
+	 * Gernerate a permutation for given list of nodes, only valid permutation is returned.
+	 * @param no of permutation
+	 * @param linkedList : input list
+	 * @param arrayList : output list
+	 * @return
+	 */
     private  ArrayList<Node> permutationGenerator(long no, LinkedList<Node> linkedList, ArrayList<Node> arrayList) {
         if (linkedList.isEmpty()) {
         	for(int i=0; i<arrayList.size(); i++){
@@ -59,6 +65,11 @@ public class BranchAnBound {
         linkedList.remove(index);
         return permutationGenerator((int) (no % subFactorial), linkedList, arrayList);
     }
+    
+    /**
+     * Find all permutations for given list of nodes// this method is exposed for the sake of testing
+     * @return
+     */
     public ArrayList<ArrayList<Node>> permutation(){
     	ArrayList<ArrayList<Node>> permutations=new ArrayList<ArrayList<Node>>();
     	long fact=factorial(list.size());
