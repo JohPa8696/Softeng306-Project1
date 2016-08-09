@@ -2,6 +2,7 @@ package schedulers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,11 +17,60 @@ import node.Node;
  * Date: 05/08/16
  */
 public class BranchAnBound {
+	
+	private ArrayList<Node> list;
 	private int numProc;
-	public BranchAnBound(int numProc){
+	public BranchAnBound(int numProc,ArrayList<Node> list){
 		this.numProc = numProc;
+		this.list=list;
 	}
 	
+	/**
+	 * Calulate the number of unique set for a given number of nodes
+	 * @param n
+	 * @return
+	 */
+	private long factorial(int n) {
+   	 	if (n > 20) throw new IllegalArgumentException(n + " is out of range");
+        long fact = 1;
+        for (int i = 2; i <= n; i++) {
+            fact *= i;
+        }
+        return fact;
+	}
+
+    private  ArrayList<Node> permutationGenerator(long no, LinkedList<Node> linkedList, ArrayList<Node> arrayList) {
+        if (linkedList.isEmpty()) {
+        	for(int i=0; i<arrayList.size(); i++){
+        		Node n=arrayList.get(i);
+        		ArrayList<Node> parents=new ArrayList<Node>(n.getParents().keySet());
+        		for(int j=0; j<parents.size(); j++){
+        			if(arrayList.indexOf(parents.get(j))>i){
+        				return null;
+        			}
+        		}
+        		
+        	}
+        	return  arrayList;
+        }
+        long subFactorial = factorial(linkedList.size() - 1);
+        int index=(int) (no / subFactorial);
+        arrayList.add(linkedList.get(index));
+        linkedList.remove(index);
+        return permutationGenerator((int) (no % subFactorial), linkedList, arrayList);
+    }
+    public ArrayList<ArrayList<Node>> permutation(){
+    	ArrayList<ArrayList<Node>> permutations=new ArrayList<ArrayList<Node>>();
+    	long fact=factorial(list.size());
+    	for(int i=0; i<fact; i++){
+    		ArrayList<Node> permutation=permutationGenerator(i,new LinkedList<>(list), new ArrayList<Node>() );
+    		if(!(permutation==null)){
+    			permutations.add(permutation);
+    		}
+    	}
+    	return permutations;
+    	
+    }
 	/**
 	 * @param nodelist
 	 * @return the final finish time of the list of a specific order and allocation.
