@@ -25,7 +25,7 @@ public class Main {
 		//int numProc=Integer.parseInt(args[1].trim()); 
 		//String fileName=args[0];
 		int numProc=2;
-		String fileName="largeinput.dot";
+		String fileName="resources/input.dot";
 		InputProcessor ip=new InputProcessor(fileName);
 		ip.processInput();
 		list=ip.getGraph();
