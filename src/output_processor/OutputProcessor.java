@@ -43,7 +43,7 @@ public class OutputProcessor {
 						+ parts[1].substring(1, (parts[1].length() - 1));
 				line = parts[0] + " \"" + nameOfGraph + "\" {";
 				writer.println(line);
-			} else if (line.contains(">") || line.contains("}")) {
+			} else if (line.contains(">") || line.contains("}") || !line.contains("Weight=")) {
 				writer.println(line);
 			} else {
 				String[] parts = line.split("\\s+");
@@ -56,7 +56,7 @@ public class OutputProcessor {
 								break;
 							}
 						}
-						line = "\t" + parts[1] + "\t\t" + "[Weight="
+						line = "\t" + parts[1] + "\t " + "[Weight="
 								+ n.getWeight() + ",Start=" + n.getStartTime()
 								+ ",Processor=" + n.getProcessor() + "];";
 						writer.println(line);
