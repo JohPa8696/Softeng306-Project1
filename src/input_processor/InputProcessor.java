@@ -38,7 +38,7 @@ public class InputProcessor implements TaskReader{
 			while(scan.hasNext()){
 				String line=scan.nextLine();
 				// 	Ignore lines that contain "{" or "}" characters
-				if(line.contains("{")|| line.contains("}")){			
+				if(line.contains("{")|| line.contains("}") || !line.contains("Weight=")){			
 					continue;
 				}
 				/*Split each line into parts by tab characters*/
