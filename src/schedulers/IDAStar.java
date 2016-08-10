@@ -34,11 +34,15 @@ public class IDAStar implements Scheduler {
 		this.nameIndexMap = nameIndexMap;
 		
 		scheduledNodes = new ArrayList<Boolean>(dag.size());
-		Collections.fill(scheduledNodes, Boolean.FALSE);
+		
+		for (int i = 0; i < dag.size(); i++){
+			scheduledNodes.add(false);
+		}
+		//Collections.fill(scheduledNodes, Boolean.FALSE);
 		
 		procFinishTimes = new ArrayList<Stack<NodeTemp>>(numProc);
 		for (int i = 0; i < numProc; i++){
-			procFinishTimes.set(i, new Stack<NodeTemp>());
+			procFinishTimes.add(new Stack<NodeTemp>());
 		}
 		
 		bestSchedule = new ArrayList<>(dag.size());
@@ -61,6 +65,8 @@ public class IDAStar implements Scheduler {
 				boolean isSolved = false;
 				while (!isSolved){
 					isSolved = buildTree(dag.get(i), 1);
+					fCutOff = nextCutOff; // NOTE: do i need to reset next cut off?
+					nextCutOff = -1;
 				}
 			}
 		}
@@ -90,6 +96,8 @@ public class IDAStar implements Scheduler {
 			node.setStartTime(nodeStartTime);
 			node.setFinishTime(g);
 			node.setProcessor(pNo);
+			
+			scheduledNodes.set(node.getIndex(), true);
 			
 			//procFinishTimes.set(pNo-1, g);
 			procFinishTimes.get(pNo-1).push(node);
@@ -133,6 +141,8 @@ public class IDAStar implements Scheduler {
 				/*node.setStartTime(-1);
 				node.setFinishTime(-1);
 				node.setProcessor(-1);*/
+				
+				scheduledNodes.set(node.getIndex(), false);
 				
 				// backtrack the procFinishTime
 				procFinishTimes.get(pNo - 1).pop();
@@ -178,7 +188,12 @@ public class IDAStar implements Scheduler {
 			traversalTime = 0;
 		}
 		
-		int procFinishTime = procFinishTimes.get(pNo-1).peek().getFinishTime();
+		int procFinishTime; 
+		if (!procFinishTimes.get(pNo - 1).isEmpty()){
+			procFinishTime = procFinishTimes.get(pNo-1).peek().getFinishTime();
+		} else {
+			procFinishTime = 0;
+		}
 		
 		// return the latest of the two times
 		return procFinishTime > parentFinishTime ? procFinishTime : parentFinishTime;
