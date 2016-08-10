@@ -18,6 +18,7 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Stack<NodeTemp>> procFinishTimes;
+	private Map<String, Integer> nameIndexMap;
 	
 	private int numProc;
 	private int fCutOff = 0;
@@ -26,14 +27,15 @@ public class IDAStar implements Scheduler {
 	private ArrayList<NodeTemp> bestSchedule;
 	private int bestFinishTime = -1;
 
-	public IDAStar(ArrayList<NodeTemp> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
+	public IDAStar(ArrayList<NodeTemp> dag, ArrayList<Boolean> nextAvailableNodes, int numProc, Map<String, Integer> nameIndexMap) {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
-
+		this.numProc = numProc;
+		this.nameIndexMap = nameIndexMap;
+		
 		scheduledNodes = new ArrayList<Boolean>(dag.size());
 		Collections.fill(scheduledNodes, Boolean.FALSE);
 		
-		this.numProc = numProc;
 		procFinishTimes = new ArrayList<Stack<NodeTemp>>(numProc);
 		for (int i = 0; i < numProc; i++){
 			procFinishTimes.set(i, new Stack<NodeTemp>());
