@@ -3,18 +3,21 @@ package schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Stack;
 
 import node.Node;
 import node.NodeTemp;
 
 public class IDAStar implements Scheduler {
+	
+	// TODO: Make some unit tests after all is implemented
 
 	private ArrayList<NodeTemp> dag;
 	// TODO: extend the node class for IDA star (downcast?)
 	// TODO: also merge the two following masks as fields for the extended node
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
-	private ArrayList<Integer> procFinishTimes;
+	private ArrayList<Stack<NodeTemp>> procFinishTimes;
 	
 	private int numProc;
 	private int fCutOff = 0;
@@ -31,7 +34,10 @@ public class IDAStar implements Scheduler {
 		Collections.fill(scheduledNodes, Boolean.FALSE);
 		
 		this.numProc = numProc;
-		procFinishTimes = new ArrayList<Integer>(numProc);
+		procFinishTimes = new ArrayList<Stack<NodeTemp>>(numProc);
+		for (int i = 0; i < numProc; i++){
+			procFinishTimes.set(i, new Stack<NodeTemp>());
+		}
 		
 		bestSchedule = new ArrayList<>(dag.size());
 	}
@@ -45,7 +51,10 @@ public class IDAStar implements Scheduler {
 				fCutOff= dag.get(i).getWeight() + getHValue(dag.get(i));
 				
 				// reset procFinishTimes
-				Collections.fill(procFinishTimes, 0);
+				//Collections.fill(procFinishTimes, 0);
+				for (Stack<NodeTemp> s:procFinishTimes){
+					s.clear();
+				}
 				
 				boolean isSolved = false;
 				while (!isSolved){
@@ -75,18 +84,28 @@ public class IDAStar implements Scheduler {
 			}
 			return false;
 		} else {
-			// TODO: add node to trail/path...
+
 			node.setStartTime(nodeStartTime);
 			node.setFinishTime(g);
 			node.setProcessor(pNo);
 			
-			procFinishTimes.set(pNo-1, g);
+			//procFinishTimes.set(pNo-1, g);
+			procFinishTimes.get(pNo-1).push(node);
 			nextAvailableNodes.set(node.getIndex(), false);
 			
-			if(node.getChildren().isEmpty() /*TODO: and no more avaiable, and trail size = num of nodes*/){
-				// TODO: copy solution to somewhere, store best time
+			boolean isAvailable = checkAnyAvailable();
+			
+			// if the current node is a leaf (i.e. an ending task) AND there are no more tasks
+			if(node.getChildren().isEmpty() && !isAvailable){
 				// NOTE: another way to copy the schedule would be to make a less heavy Node class which only has
 				// can copy outside after buildTree finishes recursion, so long as i don't reset as going back up
+				
+				// only copy if current solution has better finish time
+				if (bestFinishTime > g || bestFinishTime == -1){
+					bestFinishTime = g;
+					copySolution();
+				}
+				
 				return true;
 			} else {
 				for (int childIndex:node.getChildren()){
@@ -107,15 +126,14 @@ public class IDAStar implements Scheduler {
 					}
 				}
 				
-				// TODO: remove node from trail/path
-				
 				// reset start and finish times and proc number of this node...
 				// not exactly necessary
 				/*node.setStartTime(-1);
 				node.setFinishTime(-1);
 				node.setProcessor(-1);*/
 				
-				// FIXME: backtrack the procFinishTime
+				// backtrack the procFinishTime
+				procFinishTimes.get(pNo - 1).pop();
 
 				// set child availability to false
 				for (int childIndex:node.getChildren()){
@@ -158,7 +176,7 @@ public class IDAStar implements Scheduler {
 			traversalTime = 0;
 		}
 		
-		int procFinishTime = procFinishTimes.get(pNo-1);
+		int procFinishTime = procFinishTimes.get(pNo-1).peek().getFinishTime();
 		
 		// return the latest of the two times
 		return procFinishTime > parentFinishTime ? procFinishTime : parentFinishTime;
@@ -205,6 +223,22 @@ public class IDAStar implements Scheduler {
 		
 		return isResolved;
 	}
+	
+	private boolean checkAnyAvailable(){
+		boolean isAvailable = false;
+		for (Boolean b:nextAvailableNodes){
+			isAvailable = isAvailable || b;
+			if(isAvailable) break;
+		}
+		
+		return isAvailable;
+	}
+	
+	private void copySolution(){
+		for (int i = 0; i<bestSchedule.size(); i++){
+			bestSchedule.set(i, new NodeTemp(dag.get(i)));
+		}
+	}
 
 	@Override
 	public ArrayList<Node> getSchedule() {
@@ -213,5 +247,9 @@ public class IDAStar implements Scheduler {
 	
 	public ArrayList<NodeTemp> getScheduleTemp() {
 		return bestSchedule;
+	}
+	
+	public int getFinishTime(){
+		return bestFinishTime;
 	}
 }
