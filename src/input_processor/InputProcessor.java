@@ -82,6 +82,7 @@ public class InputProcessor implements TaskReader{
 						n.setWeight(weight);
 						listOfNodes.add(n);
 						map.put(name, index);
+						n.setIndex(index);
 						addAvaiableNode(n);
 						index++;
 					}else{
@@ -112,6 +113,7 @@ public class InputProcessor implements TaskReader{
 						p=new Node(parentName);
 						listOfNodes.add(p);
 						map.put(parentName, index);
+						p.setIndex(index);
 						addAvaiableNode(p);
 						index++;
 					}else{
@@ -124,6 +126,7 @@ public class InputProcessor implements TaskReader{
 						c=new Node(childName);
 						listOfNodes.add(c);
 						map.put(childName, index);
+						c.setIndex(index);
 						addAvaiableNode(c);
 						removeAvailableNode(c);
 						index++;
