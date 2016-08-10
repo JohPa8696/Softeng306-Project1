@@ -1,7 +1,6 @@
 package schedulers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Stack;
 
@@ -18,11 +17,10 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Boolean> nextAvailableNodes;
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Stack<NodeTemp>> procFinishTimes;
-	private Map<String, Integer> nameIndexMap;
 	
 	private int numProc;
-	private int fCutOff = 0;
-	private int nextCutOff = -1;
+	private float fCutOff = 0;
+	private float nextCutOff = -1;
 	
 	private ArrayList<NodeTemp> bestSchedule;
 	private int bestFinishTime = -1;
@@ -31,14 +29,12 @@ public class IDAStar implements Scheduler {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
 		this.numProc = numProc;
-		this.nameIndexMap = nameIndexMap;
-		
+
 		scheduledNodes = new ArrayList<Boolean>(dag.size());
 		
 		for (int i = 0; i < dag.size(); i++){
 			scheduledNodes.add(false);
 		}
-		//Collections.fill(scheduledNodes, Boolean.FALSE);
 		
 		procFinishTimes = new ArrayList<Stack<NodeTemp>>(numProc);
 		for (int i = 0; i < numProc; i++){
@@ -82,8 +78,8 @@ public class IDAStar implements Scheduler {
 	private boolean buildTree(NodeTemp node, int pNo) {
 		int nodeStartTime = getStartTime(node, pNo);
 		int g = nodeStartTime + node.getWeight();
-		int h = getHValue(node);
-		int f = g+h;
+		float h = getHValue(node);
+		float f = g+h;
 		
 		// if greater than cut off, we only store the next cut off, no need to actually traverse it
 		if (f > fCutOff ){
@@ -103,6 +99,14 @@ public class IDAStar implements Scheduler {
 			procFinishTimes.get(pNo-1).push(node);
 			nextAvailableNodes.set(node.getIndex(), false);
 			
+			for (int childIndex:node.getChildren()){
+				// check dependencies of children, add them to available if they can be visited
+				boolean isResolved = checkDependencies(dag.get(childIndex));
+				if (isResolved){
+					nextAvailableNodes.set(childIndex, true);
+				}
+			}
+
 			boolean isAvailable = checkAnyAvailable();
 			
 			// if the current node is a leaf (i.e. an ending task) AND there are no more tasks
@@ -118,21 +122,16 @@ public class IDAStar implements Scheduler {
 				
 				return true;
 			} else {
-				for (int childIndex:node.getChildren()){
-					// check dependencies of children, add them to available if they can be visited
-					boolean isResolved = checkDependencies(dag.get(childIndex));
-					if (isResolved){
-						nextAvailableNodes.set(childIndex, true);
-					}
-				}
-
+			
 				// begin recursion
 				boolean isSuccessful = false;
 				for (int i = 0;i<nextAvailableNodes.size();i++){
 					if (nextAvailableNodes.get(i)){
 						for (int j = 1; j<=numProc; j++){
 							isSuccessful = buildTree(dag.get(i), j);
+							if (isSuccessful) break;
 						}
+						if (isSuccessful) break;
 					}
 				}
 				
@@ -205,20 +204,18 @@ public class IDAStar implements Scheduler {
 	 * @param node - the node/task
 	 * @return integer value for the estimation
 	 */
-	private int getHValue(NodeTemp node){
+	private float getHValue(NodeTemp node){
 		int totalRemainWeight = 0;
 		// NOTE: can keep track of num remaining as we do recursion, as private field
-		int numRemaining = 0;
-		for (int i=0; i<scheduledNodes.size(); i++){
+		for (int i=0; i < scheduledNodes.size(); i++){
 			// ignore the current node's weight
 			if (i == node.getIndex()) continue;
 			
 			if (!scheduledNodes.get(i)){
 				totalRemainWeight += dag.get(i).getWeight();
-				numRemaining++;
 			}
 		}
-		return totalRemainWeight/(numRemaining*numProc);
+		return totalRemainWeight/(float) numProc;
 		
 	}
 	
