@@ -16,8 +16,8 @@ public class InputProcessorTest {
 	private ArrayList<Node> list1 ;
 	private ArrayList<Node> list2 ;
 	void setup(){
-		ip1= new InputProcessor("input.dot");
-		ip2= new InputProcessor("largeinput.dot");
+		ip1= new InputProcessor(new String[]{"resources/input.dot","2"});
+		ip2= new InputProcessor(new String[]{"resources/largeinput.dot","3"});
 		try {
 			ip1.processInput();
 			ip2.processInput();
