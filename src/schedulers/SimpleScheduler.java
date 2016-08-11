@@ -8,17 +8,16 @@ import node.Node;
 
 /**
  * Class: SimpleScheduler Description: Creates a schedule for a single processor
- * only
+ * only.
  * 
  * @author vincent
  */
 public class SimpleScheduler implements Scheduler {
-	ArrayList<Node> nodes = new ArrayList<Node>(); // The DAG or input array
-	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule or
-															// output array
+	ArrayList<Node> nodes = new ArrayList<Node>(); // The input array
+	static ArrayList<Node> schedule = new ArrayList<Node>();// The output array
 
 	/**
-	 * Constructor, takes in a list of nodes
+	 * Constructor, takes in a list of nodes.
 	 * 
 	 * @param nodes
 	 */
@@ -28,7 +27,7 @@ public class SimpleScheduler implements Scheduler {
 
 	/**
 	 * This is the entry of the permutation method Creates a valid schedule for
-	 * a single processor
+	 * a single processor.
 	 * 
 	 * @param nodes
 	 * @return schedule
@@ -40,7 +39,7 @@ public class SimpleScheduler implements Scheduler {
 
 	/**
 	 * The recursive part of the permutation method Creates a valid schedule for
-	 * a single processor
+	 * a single processor.
 	 * 
 	 * @param schedule
 	 * @param nodes
@@ -81,7 +80,7 @@ public class SimpleScheduler implements Scheduler {
 
 	/**
 	 * Checks if a schedule contains all the parents/dependencies for a child
-	 * node
+	 * node.
 	 * 
 	 * @return boolean
 	 */
@@ -100,14 +99,14 @@ public class SimpleScheduler implements Scheduler {
 	}
 
 	/**
-	 * Returns a schedule
+	 * Returns a schedule.
 	 */
 	public ArrayList<Node> getSchedule() {
 		return SimpleScheduler.schedule;
 	}
 
 	/**
-	 * Produces a schedule from the list of nodes
+	 * Produces a schedule from the list of nodes.
 	 */
 	@Override
 	public void schedule() {
