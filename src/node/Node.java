@@ -13,7 +13,7 @@ public class Node {
 		private String name;
 		private int weight=0;
 		private int index;											/* Index of node in the main array list*/
-		private HashMap<Node,Integer> parents= new HashMap<>();		/* Store edge weights i.e. the cost of communication between
+		private HashMap<Node, Integer> parents= new HashMap<>();	/* Store edge weights i.e. the cost of potential communication between
 																	the node and its parent nodes*/
 		private ArrayList<Node> children= new ArrayList<Node>();    /* Contains references to children node*/
 		private int processor=0;									/* The processor that the node (i.e task) is assigned to*/
