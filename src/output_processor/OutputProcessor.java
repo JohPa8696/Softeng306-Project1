@@ -49,7 +49,9 @@ public class OutputProcessor {
 				String[] parts = line.split("\\s+");
 				Node n = null;
 				for (String s : parts) {
-					if (s.matches("[a-zA-Z0-9]")) {
+					System.out.println(s);
+					if (s.matches("^[a-zA-Z0-9]*$") && s.length() > 0) {
+						System.out.println(s);
 						for (Node node : schedule) {
 							if (node.getName().equals(s)) {
 								n = node;
