@@ -7,74 +7,111 @@ import java.util.Set;
 import node.Node;
 
 /**
- * Class: SimpleScheduler
- * Description: Creates a schedule for a single processor only
+ * Class: SimpleScheduler Description: Creates a schedule for a single processor
+ * only
+ * 
  * @author vincent
  */
 public class SimpleScheduler implements Scheduler {
-	ArrayList<Node> nodes; // The DAG or input array
-	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule or output array
-	
-	public SimpleScheduler(ArrayList<Node> nodes){
-		this.nodes=nodes;
+	ArrayList<Node> nodes = new ArrayList<Node>(); // The DAG or input array
+	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule or
+															// output array
+
+	/**
+	 * Constructor, takes in a list of nodes
+	 * 
+	 * @param nodes
+	 */
+	public SimpleScheduler(ArrayList<Node> nodes) {
+		this.nodes = nodes;
 	}
-	
-	public static ArrayList<Node> permutation(ArrayList<Node> nodes) { 
-		permutation(schedule, nodes); 
+
+	/**
+	 * This is the entry of the permutation method Creates a valid schedule for
+	 * a single processor
+	 * 
+	 * @param nodes
+	 * @return schedule
+	 */
+	public static ArrayList<Node> permutation(ArrayList<Node> nodes) {
+		permutation(schedule, nodes);
 		return schedule;
 	}
-	
-	private static boolean permutation(ArrayList<Node> schedule, ArrayList<Node> nodes) {
+
+	/**
+	 * The recursive part of the permutation method Creates a valid schedule for
+	 * a single processor
+	 * 
+	 * @param schedule
+	 * @param nodes
+	 * @return boolean
+	 */
+	private static boolean permutation(ArrayList<Node> schedule,
+			ArrayList<Node> nodes) {
+		// Base case
 		if (nodes.isEmpty()) {
-//	    	for(Node n: schedule){
-//            	System.out.print(n.getName() + " ");
-//            }System.out.println();
-            return true;
-	    }
-	    else {
-	        for (int i = 0; i < nodes.size(); i++){
-	        	Node n = nodes.get(i);
-	        	
-	        	if (!isValid(n, schedule)){
-	        		continue;
-	        	}else if(schedule.size()==0){
-	        		n.setStartTime(0);
-	        		n.setProcessor(1);
-	        	}else{
-	        		n.setStartTime(schedule.get(schedule.size()-1).getStartTime()+schedule.get(schedule.size()-1).getWeight());
-	        		n.setProcessor(1);
-	        	}
-	        	schedule.add(n);
-	            nodes.remove(i);
-	            if(permutation(schedule, nodes)){
-	            	return true;
-	            }
-	            nodes.add(i,schedule.get(schedule.size()-1));
-	            schedule.remove(schedule.size()-1);
+			return true;
+		} else {
+			// Selects a node from the list of nodes
+			for (int i = 0; i < nodes.size(); i++) {
+				Node n = nodes.get(i);
+				if (!isValid(n, schedule)) {
+					// Skips if the nodes parents/dependencies are not present
+					continue;
+				} else if (schedule.size() == 0) {
+					n.setStartTime(0);
+					n.setProcessor(1);
+				} else {
+					n.setStartTime(schedule.get(schedule.size() - 1)
+							.getStartTime()
+							+ schedule.get(schedule.size() - 1).getWeight());
+					n.setProcessor(1);
+				}
+				schedule.add(n);
+				nodes.remove(i);
+				if (permutation(schedule, nodes)) {
+					return true;
+				}
+				nodes.add(i, schedule.get(schedule.size() - 1));
+				schedule.remove(schedule.size() - 1);
 			}
-	    }
+		}
 		return false;
 	}
-	private static boolean isValid(Node n, ArrayList<Node> schedule){
+
+	/**
+	 * Checks if a schedule contains all the parents/dependencies for a child
+	 * node
+	 * 
+	 * @return boolean
+	 */
+	private static boolean isValid(Node n, ArrayList<Node> schedule) {
 		final Set<Map.Entry<Node, Integer>> entries = n.getParents().entrySet();
-		if (entries.size()==0){
+		if (entries.size() == 0) {
 			return true;
 		}
-		for(Map.Entry<Node, Integer> entry : entries){
+		for (Map.Entry<Node, Integer> entry : entries) {
 			Node parent = entry.getKey();
-			if(schedule.indexOf(parent) < 0){
+			if (schedule.indexOf(parent) < 0) {
 				return false;
 			}
 		}
 		return true;
 	}
-	public ArrayList<Node> getSchedule(){
+
+	/**
+	 * Returns a schedule
+	 */
+	public ArrayList<Node> getSchedule() {
 		return SimpleScheduler.schedule;
 	}
-	
+
+	/**
+	 * Produces a schedule from the list of nodes
+	 */
 	@Override
 	public void schedule() {
 		SimpleScheduler.permutation(nodes);
 	}
-	
+
 }
