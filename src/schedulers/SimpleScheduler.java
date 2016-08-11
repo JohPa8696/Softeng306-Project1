@@ -26,9 +26,9 @@ public class SimpleScheduler implements Scheduler {
 	
 	private static boolean permutation(ArrayList<Node> schedule, ArrayList<Node> nodes) {
 		if (nodes.isEmpty()) {
-	    	for(Node n: schedule){
-            	System.out.print(n.getName() + " ");
-            }System.out.println();
+//	    	for(Node n: schedule){
+//            	System.out.print(n.getName() + " ");
+//            }System.out.println();
             return true;
 	    }
 	    else {
