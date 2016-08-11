@@ -3,22 +3,35 @@ package node;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Represents a node in the Directed Acyclic Graph (DAG).
+ *
+ */
+
 public class Node {
 		
 		private String name;
 		private int weight=0;
 		private int index;											/* Index of node in the main array list*/
-		private HashMap<Node,Integer> parents= new HashMap<>();		/* Parents node and cost of communication from parent nodes*/
-		private ArrayList<Node> children= new ArrayList<Node>();    /* Contains reference to children node*/
-		private int processor=0;										/* The processor that the node(i.e task) is assigned to*/
+		private HashMap<Node, Integer> parents= new HashMap<>();	/* Store edge weights i.e. the cost of potential communication between
+																	the node and its parent nodes*/
+		private ArrayList<Node> children= new ArrayList<Node>();    /* Contains references to children node*/
+		private int processor=0;									/* The processor that the node (i.e task) is assigned to*/
 		private int finishTime;										/* Finish time of the node*/
-		private int startTime=0;										/* Time when node is being executed*/
+		private int startTime=0;									/* Start time of the node*/
 		
-		/**
-		 * 
-		 */
+
 		public Node(String name){
-			this.name=name;
+			this.name = name;
+		}
+		
+		public Node(Node node){
+			this.name = node.name;
+			this.weight = node.weight;
+			this.index = node.index;
+			this.processor = node.processor;
+			this.startTime = node.startTime;
+			this.finishTime = node.finishTime;
 		}
 		
 		public String getName() {

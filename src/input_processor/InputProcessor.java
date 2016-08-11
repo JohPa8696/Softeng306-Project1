@@ -13,6 +13,10 @@ import node.Node;
 public class InputProcessor implements TaskReader{
 		
 		private String fileName;
+		private int numProc=1;
+		private int numThread=1;
+		private boolean visualisation=false;
+		private String outputFileName;
 		// Map stores node's name and their index in List_of_nodes
 		private HashMap<String, Integer> map= new HashMap<>();	
 		// Array stores all nodes/tasks
@@ -21,11 +25,25 @@ public class InputProcessor implements TaskReader{
 		private ArrayList<Boolean> nextAvailableNodes = new ArrayList<Boolean>();/*COMMENT HERE*/
 		
 		/**
-		 * Constructor
-		 * @param fileName
+		 * Constructor also handle command line arguments
+		 * @param args
 		 */
-		public InputProcessor(String fileName){
-			this.fileName=fileName;
+		public InputProcessor(String[] args){
+			
+			//this.fileName=args[0];
+			//this.numProc=Integer.parseInt(args[1].trim());
+			this.fileName="resources/input.dot";
+			for( int i=2; i<args.length-2; i++){
+				if( args[i].equals("-p")){
+					numThread=Integer.parseInt( args[i+1].trim());
+					i++;
+				}else if( args[i].equals("-v")){
+					visualisation=true;
+				}else if( args[i].equals("-o")){
+					outputFileName=args[i+1];
+					i++;
+				}
+			}
 		}
 		
 		/**
@@ -64,7 +82,8 @@ public class InputProcessor implements TaskReader{
 						n.setWeight(weight);
 						listOfNodes.add(n);
 						map.put(name, index);
-						addAvaiableNode(n);
+						n.setIndex(index);
+						addAvailableNode(n);
 						index++;
 					}else{
 						// If the node is already in the list, assign the weight to the node
@@ -94,7 +113,8 @@ public class InputProcessor implements TaskReader{
 						p=new Node(parentName);
 						listOfNodes.add(p);
 						map.put(parentName, index);
-						addAvaiableNode(p);
+						p.setIndex(index);
+						addAvailableNode(p);
 						index++;
 					}else{
 						p=listOfNodes.get(map.get(parentName));
@@ -106,7 +126,8 @@ public class InputProcessor implements TaskReader{
 						c=new Node(childName);
 						listOfNodes.add(c);
 						map.put(childName, index);
-						addAvaiableNode(c);
+						c.setIndex(index);
+						addAvailableNode(c);
 						removeAvailableNode(c);
 						index++;
 					}else{
@@ -136,7 +157,7 @@ public class InputProcessor implements TaskReader{
 				return true;
 			}
 		}
-		private void addAvaiableNode(Node n){
+		private void addAvailableNode(Node n){
 			int index = map.get(n.getName());
 			nextAvailableNodes.add(true);
 		}

@@ -12,21 +12,19 @@ import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
 import input_processor.InputProcessor;
 
+/**
+ * This class implements an application that finds a schedules with the shortest schedule length
+ *
+ */
 public class Main {
 	
-	
-	
+
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Boolean> available; 
 		HashMap<String, Integer> map= new HashMap<>();	
-		//Recieving command line arguments
-		//int numProc=Integer.parseInt(args[1].trim()); 
-		//String fileName=args[0];
-		int numProc=2;
-		String fileName="resources/input.dot";
-		InputProcessor ip=new InputProcessor(fileName);
+		InputProcessor ip=new InputProcessor(args);
 		ip.processInput();
 		list=ip.getGraph();
 		map=ip.getMap();	
@@ -67,7 +65,7 @@ public class Main {
 		
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println("Testing output processor class");
-		OutputProcessor op = new OutputProcessor(fileName, ss.getSchedule());
+		OutputProcessor op = new OutputProcessor(args[0], ss.getSchedule());
 		op.processOutput();
 		
 		
