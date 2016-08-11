@@ -74,7 +74,6 @@ public class OutputProcessor {
 				Node n = null;
 				for (String s : parts) {
 					if (s.matches("^[a-zA-Z0-9]*$") && s.length() > 0) {
-						System.out.println(s);
 						for (Node node : schedule) {
 							if (node.getName().equals(s)) {
 								n = node;
