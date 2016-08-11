@@ -24,47 +24,19 @@ public class Main {
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Boolean> available; 
 		HashMap<String, Integer> map= new HashMap<>();	
+		
+		//Process Input.
 		InputProcessor ip=new InputProcessor(args);
 		ip.processInput();
 		list=ip.getGraph();
 		map=ip.getMap();	
 		available=ip.getNextAvailableNodes();
 		
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing allocation class");
-		BranchAnBound bnb = new BranchAnBound(4, ip.getGraph());
-		bnb.testalloc();
-		
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing branch and bound permutation method");
-		BranchAnBound bab=new BranchAnBound(2,list);
-		ArrayList<ArrayList<Node>> permutations =bab.permutation();
-		for(ArrayList<Node> al:permutations){
-			for(Node n: al){
-				System.out.print(n.getName());
-			}
-			System.out.println();
-		}
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing input processor class");
-		for(Node n : list){
-			System.out.println(n.getName()+ " weight: " +n.getWeight());
-		}
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing input processor class");
-		for(String name: map.keySet()){
-			int index=map.get(name);
-			boolean isAvailable = available.get(index);
-			System.out.println(name +" index: " + index + " isAvailable: " + isAvailable);
-		}
-		
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing simple scheduler class");
-		SimpleScheduler ss = new SimpleScheduler(list);
+		// Creates Schedule
+		Scheduler ss = new SimpleScheduler(list);
 		ss.schedule();
 		
-		System.out.println("-----------------------------------------------------------------");
-		System.out.println("Testing output processor class");
+		// Create output file
 		OutputProcessor op = new OutputProcessor(args[0], ss.getSchedule());
 		op.processOutput();
 		
