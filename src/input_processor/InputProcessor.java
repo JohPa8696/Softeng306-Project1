@@ -83,7 +83,7 @@ public class InputProcessor implements TaskReader{
 						listOfNodes.add(n);
 						map.put(name, index);
 						n.setIndex(index);
-						addAvaiableNode(n);
+						addAvailableNode(n);
 						index++;
 					}else{
 						// If the node is already in the list, assign the weight to the node
@@ -114,7 +114,7 @@ public class InputProcessor implements TaskReader{
 						listOfNodes.add(p);
 						map.put(parentName, index);
 						p.setIndex(index);
-						addAvaiableNode(p);
+						addAvailableNode(p);
 						index++;
 					}else{
 						p=listOfNodes.get(map.get(parentName));
@@ -127,7 +127,7 @@ public class InputProcessor implements TaskReader{
 						listOfNodes.add(c);
 						map.put(childName, index);
 						c.setIndex(index);
-						addAvaiableNode(c);
+						addAvailableNode(c);
 						removeAvailableNode(c);
 						index++;
 					}else{
@@ -157,7 +157,7 @@ public class InputProcessor implements TaskReader{
 				return true;
 			}
 		}
-		private void addAvaiableNode(Node n){
+		private void addAvailableNode(Node n){
 			int index = map.get(n.getName());
 			nextAvailableNodes.add(true);
 		}

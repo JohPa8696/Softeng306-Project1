@@ -12,10 +12,13 @@ import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
 import input_processor.InputProcessor;
 
+/**
+ * This class implements an application that finds a schedules with the shortest schedule length
+ *
+ */
 public class Main {
 	
-	
-	
+
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
