@@ -13,7 +13,7 @@ import node.Node;
  */
 public class SimpleScheduler implements Scheduler {
 	ArrayList<Node> nodes; // The DAG or input array
-	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule oroutput array
+	static ArrayList<Node> schedule = new ArrayList<Node>();// The schedule or output array
 	
 	public SimpleScheduler(ArrayList<Node> nodes){
 		this.nodes=nodes;
