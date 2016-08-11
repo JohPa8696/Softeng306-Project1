@@ -30,9 +30,9 @@ public class InputProcessor implements TaskReader{
 		 */
 		public InputProcessor(String[] args){
 			
-			//this.fileName=args[0];
-			//this.numProc=Integer.parseInt(args[1].trim());
-			this.fileName="resources/input.dot";
+			this.fileName=args[0];
+			this.numProc=Integer.parseInt(args[1].trim());
+			//this.fileName="resources/input.dot";
 			for( int i=2; i<args.length-2; i++){
 				if( args[i].equals("-p")){
 					numThread=Integer.parseInt( args[i+1].trim());
