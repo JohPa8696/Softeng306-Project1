@@ -57,7 +57,7 @@ public class IDAStarTest {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, null);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
@@ -91,8 +91,8 @@ public class IDAStarTest {
 		b.getParents().put(c, 2);
 		
 		dag.add(a);
-		dag.add(c);
 		dag.add(b);
+		dag.add(c);
 		
 		ArrayList<Boolean> nextAvailableNodes = new ArrayList<Boolean>(3);
 		for(int i = 0; i < 3; i++){
@@ -103,13 +103,13 @@ public class IDAStarTest {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, null);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
 		int finishTime = awesome.getFinishTime();
 		System.out.println(finishTime);		
-		assertEquals(finishTime, 5);
+		assertEquals(finishTime, 7);
 
 	}
 

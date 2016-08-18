@@ -1,5 +1,6 @@
 package main;
 import node.Node;
+
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Scanner;
 
 import output_processor.OutputProcessor;
 import schedulers.BranchAnBound;
+import schedulers.IDAStar;
 import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
 import input_processor.InputProcessor;
@@ -21,28 +23,29 @@ public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		
+		long StartTime = System.currentTimeMillis();
+		
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Boolean> available; 
-		HashMap<String, Integer> map= new HashMap<>();	
+		int numProc; 
 		
-		//Process Input.
+		// Process Input.
 		InputProcessor ip=new InputProcessor(args);
 		ip.processInput();
 		list=ip.getGraph();
-		map=ip.getMap();	
 		available=ip.getNextAvailableNodes();
+		numProc = ip.getNumberOfProcessors();
 		
 		// Creates Schedule
-		Scheduler ss = new SimpleScheduler(list);
-		ss.schedule();
+//		Scheduler s = new SimpleScheduler(list);
+		Scheduler s = new IDAStar(list, available, numProc);  
+		s.schedule();
 		
 		// Create output file
-		OutputProcessor op = new OutputProcessor(args[0], ss.getSchedule());
+		OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
 		op.processOutput();
 		
-		
+		long EndTime = System.currentTimeMillis();
+		System.out.print(EndTime - StartTime);
 	}
-	
-	
-	
 }

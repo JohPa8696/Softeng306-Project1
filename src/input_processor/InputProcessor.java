@@ -30,20 +30,20 @@ public class InputProcessor implements TaskReader{
 		 */
 		public InputProcessor(String[] args){
 			
-			this.fileName=args[0];
-			this.numProc=Integer.parseInt(args[1].trim());
-			//this.fileName="resources/input.dot";
-			for( int i=2; i<args.length-2; i++){
-				if( args[i].equals("-p")){
-					numThread=Integer.parseInt( args[i+1].trim());
-					i++;
-				}else if( args[i].equals("-v")){
-					visualisation=true;
-				}else if( args[i].equals("-o")){
-					outputFileName=args[i+1];
-					i++;
-				}
-			}
+//			this.fileName=args[0];
+//			this.numProc=Integer.parseInt(args[1].trim());
+			this.fileName="resources/Nodes_11_OutTree.dot";
+//			for( int i=2; i<args.length-2; i++){
+//				if( args[i].equals("-p")){
+//					numThread=Integer.parseInt( args[i+1].trim());
+//					i++;
+//				}else if( args[i].equals("-v")){
+//					visualisation=true;
+//				}else if( args[i].equals("-o")){
+//					outputFileName=args[i+1];
+//					i++;
+//				}
+//			}
 		}
 		
 		/**

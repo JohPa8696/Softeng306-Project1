@@ -24,7 +24,7 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Node> bestSchedule;
 	private int bestFinishTime = -1;
 
-	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc, Map<String, Integer> nameIndexMap) {
+	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
 		this.numProc = numProc;
@@ -248,17 +248,13 @@ public class IDAStar implements Scheduler {
 	}
 	
 	private void copySolution(){
-		for (int i = 0; i < bestSchedule.size(); i++){
-			bestSchedule.set(i, new Node(dag.get(i)));
+		for (int i = 0; i < dag.size(); i++){
+			bestSchedule.add(i, new Node(dag.get(i)));
 		}
 	}
 
 	@Override
 	public ArrayList<Node> getSchedule() {
-		return null;
-	}
-	
-	public ArrayList<Node> getScheduleTemp() {
 		return bestSchedule;
 	}
 	
