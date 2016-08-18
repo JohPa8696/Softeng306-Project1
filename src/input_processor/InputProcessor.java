@@ -164,7 +164,7 @@ public class InputProcessor implements TaskReader{
 		
 		private void removeAvailableNode(Node n){
 			int index = map.get(n.getName());
-			nextAvailableNodes.add(index,false);
+			nextAvailableNodes.set(index,false);
 		}
 		
 		public HashMap<String,Integer> getMap(){
@@ -189,7 +189,7 @@ public class InputProcessor implements TaskReader{
 		 */
 		@Override
 		public int getNumberOfProcessors() {
-			return 0;
+			return numProc;
 		}
 		
 }
