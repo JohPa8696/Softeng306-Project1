@@ -13,6 +13,7 @@ import schedulers.IDAStar;
 import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
 import input_processor.InputProcessor;
+import dag.Dag;
 
 /**
  * This class implements an application that finds a schedules with the shortest schedule length
@@ -33,6 +34,8 @@ public class Main {
 		InputProcessor ip=new InputProcessor(args);
 		ip.processInput();
 		list=ip.getGraph();
+		Dag dag = new Dag(list);
+		dag.createDag();
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
