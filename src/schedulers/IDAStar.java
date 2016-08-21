@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 
+import dag.Dag;
+
 import node.Node;
 
 public class IDAStar implements Scheduler {
@@ -24,6 +26,9 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Node> bestSchedule;
 	private int bestFinishTime = -1;
 
+	private boolean isVisual = false;
+	private Dag visualDag;
+	
 	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
 		this.dag = dag;
 		this.nextAvailableNodes = nextAvailableNodes;
@@ -98,6 +103,8 @@ public class IDAStar implements Scheduler {
 			procFinishTimes.get(pNo-1).push(node);
 			nextAvailableNodes.set(node.getIndex(), false);
 			
+			
+			
 			for (Node child:node.getChildren()){
 				// check dependencies of children, add them to available if they can be visited
 				boolean isResolved = checkDependencies(child);
@@ -105,9 +112,14 @@ public class IDAStar implements Scheduler {
 					nextAvailableNodes.set(child.getIndex(), true);
 				}
 			}
-
+			
 			boolean isAvailable = checkAnyAvailable();
 			
+			// If we need to visualize update the visuals
+			if(isVisual){
+				node.incFrequency();
+				visualDag.update(node);
+			}
 			// if the current node is a leaf (i.e. an ending task) AND there are no more tasks
 			if(node.getChildren().isEmpty() && !isAvailable){
 				// NOTE: another way to copy the schedule would be to make a less heavy Node class which only has
@@ -118,7 +130,6 @@ public class IDAStar implements Scheduler {
 					bestFinishTime = g;
 					copySolution();
 				}
-				
 				return true;
 			} else {
 			
@@ -260,5 +271,10 @@ public class IDAStar implements Scheduler {
 	
 	public int getFinishTime(){
 		return bestFinishTime;
+	}
+	
+	public void setVisual(Dag visualDag){
+		this.isVisual = true;
+		this.visualDag = visualDag;
 	}
 }
