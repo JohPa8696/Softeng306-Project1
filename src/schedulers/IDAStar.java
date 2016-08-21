@@ -1,11 +1,11 @@
 package schedulers;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 
 import dag.Dag;
-
 import node.Node;
 
 public class IDAStar implements Scheduler {
@@ -267,6 +267,9 @@ public class IDAStar implements Scheduler {
 
 	@Override
 	public ArrayList<Node> getSchedule() {
+		for (Node node : bestSchedule){
+			visualDag.changeNodeColor(node, Color.YELLOW);
+		}
 		return bestSchedule;
 	}
 	

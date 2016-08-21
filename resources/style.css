@@ -5,6 +5,9 @@ node{
     fill-color : white,black;
     
 }
+node.final{
+	text-size : 15px;
+}
 graph{
-	fill-color:grey;
+	fill-color:#8a8a5c;
 }

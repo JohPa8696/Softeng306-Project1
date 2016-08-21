@@ -62,7 +62,11 @@ public class Dag {
 	 * Change the node color after the node's processor is determined.
 	 */
 	public void changeNodeColor(Node node,Color color){
-		g.getNode(node.getName()).setAttribute("ui.color", color);
+		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
+		//graphnode.setAttribute("ui.color", color);
+		graphnode.addAttribute("ui.class", "final");
+		graphnode.addAttribute("ui.label", "Processor: "+node.getProcessor());
+		
 	}
 	/**
 	 * Calls other function which update the DAG
