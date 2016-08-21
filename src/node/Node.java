@@ -20,6 +20,7 @@ public class Node {
 		private int finishTime;										/* Finish time of the node*/
 		private int startTime=0;									/* Start time of the node*/
 		
+		private int frequency=0;									/* How many times this node has been visited*/
 
 		public Node(String name){
 			this.name = name;
@@ -32,6 +33,7 @@ public class Node {
 			this.processor = node.processor;
 			this.startTime = node.startTime;
 			this.finishTime = node.finishTime;
+			this.frequency = node.frequency;
 		}
 		
 		public String getName() {
@@ -82,5 +84,10 @@ public class Node {
 		public void setStartTime(int startTime) {
 			this.startTime = startTime;
 		}
-		
+		public int getFrequency(){
+			return frequency;
+		}
+		public void incFrequency(){
+			this.frequency++;
+		}
 }
