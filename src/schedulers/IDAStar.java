@@ -118,6 +118,7 @@ public class IDAStar implements Scheduler {
 			// If we need to visualize update the visuals
 			if(isVisual){
 				node.incFrequency();
+				System.out.println("The added node is "+node.getName()+" and the frequency is "+node.getFrequency());
 				visualDag.update(node);
 			}
 			// if the current node is a leaf (i.e. an ending task) AND there are no more tasks

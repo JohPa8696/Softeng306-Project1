@@ -59,15 +59,20 @@ public class Dag {
 	/**
 	 * @param node
 	 * @param color
-	 * Change the node color
+	 * Change the node color after the node's processor is determined.
 	 */
 	public void changeNodeColor(Node node,Color color){
 		g.getNode(node.getName()).setAttribute("ui.color", color);
 	}
 	/**
 	 * Calls other function which update the DAG
+	 * @param n - node that has been visited
 	 */
 	public void update(Node n){
 		// TODO update the visuals of the dag
+		int freq = n.getFrequency();
+		double color = freq/100000.0;
+		g.getNode(n.getName()).setAttribute("ui.color", color);
+		
 	}
 }
