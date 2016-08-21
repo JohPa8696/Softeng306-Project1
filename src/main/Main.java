@@ -34,21 +34,34 @@ public class Main {
 		InputProcessor ip=new InputProcessor(args);
 		ip.processInput();
 		list=ip.getGraph();
-		Dag dag = new Dag(list);
-		dag.createDag();
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
+		
+		
+		
+		
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
-		Scheduler s = new IDAStar(list, available, numProc);  
-		s.schedule();
+		Scheduler s = new IDAStar(list, available, numProc);
 		
+		// visuals are displayed if set to true
+		if(ip.getVisualisation()){
+			Dag dag = new Dag(list);
+			dag.createDag();
+			s.setVisual(dag);
+		}
+		
+		// start schedule
+		s.schedule();
+
 		// Create output file
 		OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
 		op.processOutput();
 		
 		long EndTime = System.currentTimeMillis();
 		System.out.print(EndTime - StartTime);
+		
+		
 	}
 }
