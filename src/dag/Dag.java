@@ -64,4 +64,10 @@ public class Dag {
 	public void changeNodeColor(Node node,Color color){
 		g.getNode(node.getName()).setAttribute("ui.color", color);
 	}
+	/**
+	 * Calls other function which update the DAG
+	 */
+	public void update(Node n){
+		// TODO update the visuals of the dag
+	}
 }
