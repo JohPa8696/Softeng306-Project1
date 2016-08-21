@@ -1,5 +1,10 @@
 node{
     fill-mode : dyn-plain;
-    size : 20px;
+    size : 50px;
     text-size : 30px;
+    fill-color : white,black;
+    
+}
+graph{
+	fill-color:grey;
 }
