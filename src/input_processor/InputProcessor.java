@@ -13,9 +13,9 @@ import node.Node;
 public class InputProcessor implements TaskReader{
 		
 		private String fileName;
-		private int numProc=1;
+		private int numProc=5;
 		private int numThread=1;
-		private boolean visualisation=false;
+		private boolean visualisation=true;
 		private String outputFileName;
 		// Map stores node's name and their index in List_of_nodes
 		private HashMap<String, Integer> map= new HashMap<>();	
@@ -192,4 +192,7 @@ public class InputProcessor implements TaskReader{
 			return numProc;
 		}
 		
+		public boolean getVisualisation(){
+			return visualisation;
+		}
 }
