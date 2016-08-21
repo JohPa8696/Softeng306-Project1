@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import dag.Dag;
+
 import node.Node;
 
 /**
@@ -111,6 +113,12 @@ public class SimpleScheduler implements Scheduler {
 	@Override
 	public void schedule() {
 		SimpleScheduler.permutation(nodes);
+	}
+
+	@Override
+	public void setVisual(Dag visual) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
