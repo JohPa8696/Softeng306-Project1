@@ -37,7 +37,7 @@ public class Main {
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
-		numProc = 3;
+		
 		
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
