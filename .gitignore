@@ -4,4 +4,6 @@
 .project
 .classpath
 
-output.dot
+*-output.dot
+
+BBoutput/

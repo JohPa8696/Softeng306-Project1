@@ -1,40 +1,30 @@
-﻿Branch and Bound algorithm
+﻿About
+-------------
+This project solves an NP hard task scheduling problem using an Iterative Deepening A* (IDA*) algorithm. 
+Pseudocode can be found on the Github Wiki (https://github.com/JohPa8696/Softeng306-Project1/wiki/IDA*).
+
+It can be run with visualisation and parallel processing.
 
 
-Task to complete the algorithm.
+Installation instructions
+-------------
+Import the project into Eclipse and export it as a jar. Invoke the jar from the command line with the following parameters:
 
-1. Order of the node
+java −jar scheduler.jar INPUT.dot P [OPTION] 
 
-	Need to implement a permutation method to store all possible order. 
-	Expected input: ArrayList<Node>
-	Expected output: ArrayList<ArrayList<Node>>
+INPUT.dot	a task graph with integer weights in dot format 
+P 			number of processors to schedule the INPUT graph on
 
-	E.g. Using the input.dot, the possible order would be abcd,acbd. But adcb is not possible as d is dependent to c and b.
-	The final output would be like: {
-						{a,b,c,d};
-						{a,c,b,d};
-						...
-					}
-
-2. Allocation of the node to the processor
-	
-	Need to implement a method to allocate processors to each node in the arraylist that generated from 1. 
-	E.g. Using the input.dot, the number of processors assigned is 2. The possible sequence of order {a,b,c,d} would be a1,b2,c2,d1 or a1,b1,c2,d2
-	The final output would be like:{a1,b2,c2,d1} using node.setProcessor(int proc) method.
-
-	Expected input: output from 1. 
-	Expected output: ArrayList<Node>
-	Could use a search tree or bitmap to traverse the allocation of the node. i.e. 1111,1112,1121,1122,1211,....
+Optional: 
+−p N		use N cores for execution in parallel (default is sequential) 
+−v 			visualise the search 
+−o OUPUT	output file is named OUTPUT(default is INPUT−output.dot)
 
 
-3. Calculate the finish time of a specific path and update the bound (almost completed)
-	
-	Need to implement a method getFinishTime(ArrayList<Node> nodelist) to calculate the finish time of a specific path (i.e. {a1,b2,c2,d1}).
-	e.g. assume the upper bound is 10sec. If the finish time of the path exceed the bound, cut it and start another path.
-	If the upper bound is not exceed, updated the bound and return the finish time for the path. 
-
-	Expected input: ArrayList<Node> 
-	Expected output: int finishTime
-
-	Author: Jack Wong
-	Date: 05/08/16
+Authors
+-------------
+Kelvin Lau
+Xiaohui Lin
+Vincent Nio
+Johnny Pham
+Jack Wong
