@@ -37,13 +37,11 @@ public class Main {
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
-		
-		
-		
+		numProc = 4;
 		
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
-		Scheduler s = new IDAStar(list, available, numProc);
+		Scheduler s = new IDAStar(list, available, numProc, 1);
 		
 		// visuals are displayed if set to true
 		if(ip.getVisualisation()){
