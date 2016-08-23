@@ -54,8 +54,13 @@ public class Main {
 		s.schedule();
 
 		// Create output file
-		OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
-		op.processOutput();
+		if(ip.getOutputFileName() != null){
+			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule(), ip.getOutputFileName());
+			op.processOutput();
+		}else{
+			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
+			op.processOutput();
+		}
 		
 		long EndTime = System.currentTimeMillis();
 		System.out.print(EndTime - StartTime);
