@@ -36,9 +36,7 @@ public class Main {
 		list=ip.getGraph();
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
-		
-		
-		
+
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
 		Scheduler s = new IDAStar(list, available, numProc, 1);
