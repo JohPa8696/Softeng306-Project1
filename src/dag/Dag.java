@@ -26,6 +26,7 @@ public class Dag {
 	private Graph g;
 	private Graph proc_graph;
 	private int numProc;
+	private Node prevNode = null;
 	
 	public Dag(ArrayList<Node> nodelist,int numProc){
 		this.nodelist = nodelist;
@@ -96,10 +97,16 @@ public class Dag {
 	 */
 	public void update(Node n){
 		// TODO update the visuals of the dag
+		if (prevNode == null){
+			prevNode = n;
+		}else{
+			g.getNode(prevNode.getName()).setAttribute("ui.style", "fill-color: white,black;");
+			prevNode = n;
+		}
 		int freq = n.getFrequency();
 		double color = freq/100000.0;
 		g.getNode(n.getName()).setAttribute("ui.color", color);
-		
+		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: yellow,red;");
 		
 	}
 	public void updateProcGraph(Node n){
