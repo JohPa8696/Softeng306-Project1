@@ -200,4 +200,7 @@ public class InputProcessor implements TaskReader{
 		public ArrayList<Node> getListOfNodes(){
 			return listOfNodes;
 		}
+		public String getOutputFileName(){
+			return this.outputFileName;
+		}
 }
