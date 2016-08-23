@@ -44,7 +44,7 @@ public class Main {
 		
 		// visuals are displayed if set to true
 		if(ip.getVisualisation()){
-			Dag dag = new Dag(list);
+			Dag dag = new Dag(list,numProc);
 			dag.createDag();
 			s.setVisual(dag);
 		}

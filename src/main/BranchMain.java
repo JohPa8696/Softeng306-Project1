@@ -1,6 +1,7 @@
 package main;
 
 import schedulers.BranchAndBound;
+import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import node.Node;
 import output_processor.OutputProcessor;
@@ -17,7 +18,7 @@ import dag.Dag;
 public class BranchMain {
 	
 	
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, InvalidArgumentException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Node> finalList = new ArrayList<Node>();
@@ -33,7 +34,7 @@ public class BranchMain {
 		list=ip.getListOfNodes();
 		map=ip.getMap();
 		
-		Dag dag = new Dag(list);
+		Dag dag = new Dag(list,numProc);
 		dag.createDag();
 		
 		BranchAndBound b = new BranchAndBound(numProc, list);
