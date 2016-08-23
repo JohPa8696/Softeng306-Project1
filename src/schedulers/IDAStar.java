@@ -128,10 +128,10 @@ public class IDAStar implements Scheduler {
 		} else {
 
 			// If we need to visualize update the visuals
-			if (isVisual) {
+			if (isVisual && node.getName()!=null) {
 				node.incFrequency();
-				System.out.println("The added node is " + node.getName()
-						+ " and the frequency is " + node.getFrequency());
+				//System.out.println("The added node is " + node.getName()
+						//+ " and the frequency is " + node.getFrequency()+" and the processor is "+node.getProcessor());
 				visualDag.update(node);
 			}
 
@@ -156,11 +156,11 @@ public class IDAStar implements Scheduler {
 			boolean isAvailable = checkAnyAvailable();
 
 			// If we need to visualize update the visuals
-			if(isVisual){
+			/*if(isVisual&&node.getName()==" "){
 				node.incFrequency();
 				//System.out.println("The added node is "+node.getName()+" and the frequency is "+node.getFrequency());
 				visualDag.update(node);
-			}
+			}*/
 
 			// if the current node is a leaf (i.e. an ending task) AND there are
 			// no more tasks
@@ -311,6 +311,10 @@ public class IDAStar implements Scheduler {
 		bestSchedule.clear();
 		for (int i = 0; i < dag.size(); i++) {
 			bestSchedule.add(i, new Node(dag.get(i)));
+			
+			if (isVisual){
+				visualDag.updateProcGraph(dag.get(i));
+			}
 		}
 	}
 

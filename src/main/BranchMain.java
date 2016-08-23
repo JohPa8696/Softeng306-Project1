@@ -1,6 +1,7 @@
 package main;
 
 import schedulers.BranchAndBound;
+import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import node.Node;
 import output_processor.OutputProcessor;
@@ -17,7 +18,7 @@ import dag.Dag;
 public class BranchMain {
 	
 	
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, InvalidArgumentException{
 		
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Node> finalList = new ArrayList<Node>();
@@ -28,13 +29,12 @@ public class BranchMain {
 		
 		
 		list.clear();
-		String fileName = "resources/"+args[0];
-		InputProcessor ip1=new InputProcessor(fileName);
-		ip1.processInput();
-		list=ip1.getListOfNodes();
-		map=ip1.getMap();
+		InputProcessor ip=new InputProcessor(args);
+		ip.processInput();
+		list=ip.getListOfNodes();
+		map=ip.getMap();
 		
-		Dag dag = new Dag(list);
+		Dag dag = new Dag(list,numProc);
 		dag.createDag();
 		
 		BranchAndBound b = new BranchAndBound(numProc, list);
@@ -60,13 +60,15 @@ public class BranchMain {
 		
 		
 		
-		OutputProcessor out = new OutputProcessor(fileName,finalList);
-		try {
-			out.processOutput();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(ip.getOutputFileName() != null){
+			OutputProcessor op = new OutputProcessor(ip.getFileName(), finalList, ip.getOutputFileName());
+			op.processOutput();
+		}else{
+			OutputProcessor op = new OutputProcessor(ip.getFileName(), finalList);
+			op.processOutput();
 		}
+		
+		
 	}
 	
 	

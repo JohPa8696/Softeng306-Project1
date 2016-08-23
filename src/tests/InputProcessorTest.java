@@ -9,13 +9,14 @@ import org.junit.Test;
 
 import input_processor.InputProcessor;
 import node.Node;
+import utils.InvalidArgumentException;
 
 public class InputProcessorTest {
 	private InputProcessor ip1;
 	private InputProcessor ip2;
 	private ArrayList<Node> list1 ;
 	private ArrayList<Node> list2 ;
-	void setup(){
+	void setup() throws InvalidArgumentException{
 		ip1= new InputProcessor(new String[]{"resources/input.dot","2"});
 		ip2= new InputProcessor(new String[]{"resources/largeinput.dot","3"});
 		try {

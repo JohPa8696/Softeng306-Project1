@@ -12,6 +12,7 @@ import schedulers.BranchAnBound;
 import schedulers.IDAStar;
 import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
+import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
 
@@ -22,7 +23,7 @@ import dag.Dag;
 public class Main {
 	
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, InvalidArgumentException{
 		
 		long StartTime = System.currentTimeMillis();
 		
@@ -36,16 +37,14 @@ public class Main {
 		list=ip.getGraph();
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
-		
-		numProc = 4;
-		
+
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
 		Scheduler s = new IDAStar(list, available, numProc, 1);
 		
 		// visuals are displayed if set to true
 		if(ip.getVisualisation()){
-			Dag dag = new Dag(list);
+			Dag dag = new Dag(list,numProc);
 			dag.createDag();
 			s.setVisual(dag);
 		}

@@ -2,13 +2,16 @@ package dag;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import node.Node;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.implementations.*;
+
 
 /**
  * @author Jack Wong
@@ -21,15 +24,21 @@ public class Dag {
 	 */
 	private ArrayList<Node> nodelist;
 	private Graph g;
+	private Graph proc_graph;
+	private int numProc;
 	
-	public Dag(ArrayList<Node> nodelist){
+	public Dag(ArrayList<Node> nodelist,int numProc){
 		this.nodelist = nodelist;
 		g = new SingleGraph("DAG");
+		proc_graph = new SingleGraph("Processor Graph");
+		this.numProc = numProc;
 	}
 	/**
 	 * Create a visualized DAG graph
 	 */
 	public void createDag(){
+		System.setProperty("gs.ui.renderer",
+                "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		g.addAttribute("ui.stylesheet", "url('resources/style.css')");
 		
 		for (Node node : nodelist){
@@ -55,6 +64,19 @@ public class Dag {
 		for (org.graphstream.graph.Node node : g) {
 	        node.addAttribute("ui.label", node.getId());
 	    }
+		proc_graph.addAttribute("ui.stylesheet", "url('resources/style.css')");
+		for (int i=1; i<=numProc;i++){
+			String proc = "P"+i;
+			proc_graph.addNode(proc);
+			proc_graph.getNode(proc).addAttribute("ui.class", "Processor");
+			proc_graph.getNode(proc).setAttribute("xyz", 1, 3, 0);
+		}
+		for (org.graphstream.graph.Node node : proc_graph) {
+	        node.addAttribute("ui.label", node.getId());
+	    }
+		proc_graph.setStrict(false);
+		proc_graph.setAutoCreate(true);
+		proc_graph.display();
 	}
 	/**
 	 * @param node
@@ -78,5 +100,24 @@ public class Dag {
 		double color = freq/100000.0;
 		g.getNode(n.getName()).setAttribute("ui.color", color);
 		
+		
+	}
+	public void updateProcGraph(Node n){
+		proc_graph.addNode(n.getName());
+		//System.out.println(n.getName());
+		proc_graph.getNode(n.getName()).addAttribute("ui.label", n.getName());
+		//System.out.println(proc_graph.getNode(n.getName()).getId());
+		proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
+		try{
+			proc_graph.addNode(n.getName());
+			proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
+		}catch(IdAlreadyInUseException e){
+			//proc_graph.removeEdge("P"+n.getProcessor()+n.getName());
+			//proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
+			Iterable<Edge> edges = proc_graph.getNode(n.getName()).getEachEdge();
+			for (Edge edge : edges){
+				proc_graph.removeEdge(edge);
+			}
+		}
 	}
 }

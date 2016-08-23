@@ -51,7 +51,6 @@ public class OutputProcessor {
 			outputFileName = fileName.substring(0, fileName.length() - 4)
 					+ "-output.dot";
 		}
-
 		PrintWriter writer = new PrintWriter(outputFileName, "UTF-8");
 		Scanner scan = new Scanner(new File(fileName));
 		
