@@ -55,10 +55,10 @@ public class Main {
 
 		// Create output file
 		if(ip.getOutputFileName() != null){
-			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule(), ip.getOutputFileName());
+			OutputProcessor op = new OutputProcessor(ip.getFileName(), s.getSchedule(), ip.getOutputFileName());
 			op.processOutput();
 		}else{
-			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
+			OutputProcessor op = new OutputProcessor(ip.getFileName(), s.getSchedule());
 			op.processOutput();
 		}
 		
