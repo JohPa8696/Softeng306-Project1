@@ -12,6 +12,7 @@ import schedulers.BranchAnBound;
 import schedulers.IDAStar;
 import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
+import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
 
@@ -22,7 +23,7 @@ import dag.Dag;
 public class Main {
 	
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, InvalidArgumentException{
 		
 		long StartTime = System.currentTimeMillis();
 		

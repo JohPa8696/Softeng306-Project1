@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import utils.InvalidArgumentException;
+import utils.StringUtils;
 import node.Node;
 
 /**
@@ -28,27 +31,64 @@ public class InputProcessor implements TaskReader{
 		 * Constructor also handle command line arguments
 		 * @param args
 		 */
-		public InputProcessor(String[] args){
+		public InputProcessor(String[] args) throws InvalidArgumentException{
 			
-			this.fileName=args[0];
-			this.numProc=Integer.parseInt(args[1].trim());
-			//this.fileName="resources/Nodes_11_OutTree.dot";
+			// Check if the input exists
+			if( new File(args[0]).isFile()){
+				this.fileName=args[0];
+			}else{
+				throw new InvalidArgumentException("\nCannot find input file: "+ args[0]+"!");
+			}
+			
+			if(StringUtils.isNumeric(args[1])){
+				this.numProc=Integer.parseInt(args[1].trim());
+			}else{
+				throw new InvalidArgumentException("\n"+ args[1]+" is not a valid number of processors!");
+			}
+			//Loop through the rest of the command line arguments to get the optional arguments
 			for( int i=2; i<args.length; i++){
+				
+				//Thread option
 				if( args[i].equals("-p")){
-					numThread=Integer.parseInt( args[i+1].trim());
-					i++;
+			
+					if (StringUtils.isNumeric(args[i+1])){
+						numThread=Integer.parseInt( args[i+1].trim());
+						i++;
+					}else{
+						numThread=Runtime.getRuntime().availableProcessors();
+					}
+					
+				//Visualization option	
 				}else if( args[i].equals("-v")){
 					visualisation=true;
+					
+				//Output file name option
 				}else if( args[i].equals("-o")){
 					outputFileName=args[i+1];
-					System.out.println(outputFileName);
-					i++;
+					
+					if(new File(outputFileName).isFile()){ 	
+						throw new InvalidArgumentException("\nFile's name " + outputFileName + 
+								" already exists.\nPlease choose a different name");
+					}else{
+						outputFileName=args[i+1];
+						i++;
+					}
+					
+				//Violate command argument format, throw invalid exception	
+				}else{
+					throw new InvalidArgumentException("\nInvalid command line argument: " + args[i] );
 				}
 			}
 		}
+		
+		/**
+		 * Second constructor
+		 * @param fileName
+		 */
 		public InputProcessor(String fileName){
 			this.fileName=fileName;
 		}
+		
 		/**
 		 * Process input from given file
 		 * @throws FileNotFoundException
