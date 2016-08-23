@@ -28,7 +28,7 @@ public class BranchMain {
 		
 		
 		list.clear();
-		String fileName = "resources/"+args[0];
+		String fileName = args[0];
 		InputProcessor ip1=new InputProcessor(fileName);
 		ip1.processInput();
 		list=ip1.getListOfNodes();
