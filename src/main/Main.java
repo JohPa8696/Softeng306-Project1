@@ -37,13 +37,11 @@ public class Main {
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
-		
-		
-		
+		numProc = 4;
 		
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
-		Scheduler s = new IDAStar(list, available, numProc);
+		Scheduler s = new IDAStar(list, available, numProc, 1);
 		
 		// visuals are displayed if set to true
 		if(ip.getVisualisation()){
@@ -56,8 +54,13 @@ public class Main {
 		s.schedule();
 
 		// Create output file
-		OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
-		op.processOutput();
+		if(ip.getOutputFileName() != null){
+			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule(), ip.getOutputFileName());
+			op.processOutput();
+		}else{
+			OutputProcessor op = new OutputProcessor("resources/Nodes_11_OutTree.dot", s.getSchedule());
+			op.processOutput();
+		}
 		
 		long EndTime = System.currentTimeMillis();
 		System.out.print(EndTime - StartTime);

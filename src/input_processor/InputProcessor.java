@@ -16,7 +16,7 @@ public class InputProcessor implements TaskReader{
 		private int numProc=5;
 		private int numThread=1;
 		private boolean visualisation=true;
-		private String outputFileName;
+		private String outputFileName=null;
 		// Map stores node's name and their index in List_of_nodes
 		private HashMap<String, Integer> map= new HashMap<>();	
 		// Array stores all nodes/tasks
@@ -199,5 +199,8 @@ public class InputProcessor implements TaskReader{
 		}
 		public ArrayList<Node> getListOfNodes(){
 			return listOfNodes;
+		}
+		public String getOutputFileName(){
+			return this.outputFileName;
 		}
 }
