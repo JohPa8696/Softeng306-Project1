@@ -87,7 +87,7 @@ public class Dag {
 		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
 		//graphnode.setAttribute("ui.color", color);
 		graphnode.addAttribute("ui.class", "final");
-		graphnode.addAttribute("ui.label", "Processor: "+node.getProcessor());
+		graphnode.addAttribute("ui.label", node.getName()+"-"+"Processor: "+node.getProcessor());
 		
 	}
 	/**
@@ -108,6 +108,7 @@ public class Dag {
 		proc_graph.getNode(n.getName()).addAttribute("ui.label", n.getName());
 		//System.out.println(proc_graph.getNode(n.getName()).getId());
 		proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
+		proc_graph.getEdge("P"+n.getProcessor()+n.getName()).addAttribute("layout.weight", 4);
 		try{
 			proc_graph.addNode(n.getName());
 			proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
