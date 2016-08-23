@@ -45,7 +45,9 @@ public class InputProcessor implements TaskReader{
 //				}
 //			}
 		}
-		
+		public InputProcessor(String fileName){
+			this.fileName=fileName;
+		}
 		/**
 		 * Process input from given file
 		 * @throws FileNotFoundException
@@ -194,5 +196,8 @@ public class InputProcessor implements TaskReader{
 		
 		public boolean getVisualisation(){
 			return visualisation;
+		}
+		public ArrayList<Node> getListOfNodes(){
+			return listOfNodes;
 		}
 }
