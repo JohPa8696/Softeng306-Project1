@@ -203,4 +203,7 @@ public class InputProcessor implements TaskReader{
 		public String getOutputFileName(){
 			return this.outputFileName;
 		}
+		public String getFileName(){
+			return this.fileName;
+		}
 }
