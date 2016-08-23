@@ -5,3 +5,5 @@
 .classpath
 
 *-output.dot
+
+BBoutput/
