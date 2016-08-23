@@ -8,6 +8,9 @@ node{
 node.final{
 	text-size : 15px;
 }
+edge{
+	
+}
 graph{
 	fill-color:#8a8a5c;
 }

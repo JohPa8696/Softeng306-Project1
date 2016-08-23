@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import dag.Dag;
+
 public class BranchMain {
 	
 	
@@ -32,42 +34,18 @@ public class BranchMain {
 		list=ip1.getListOfNodes();
 		map=ip1.getMap();
 		
+		Dag dag = new Dag(list);
+		dag.createDag();
 		
 		BranchAndBound b = new BranchAndBound(numProc, list);
 		
 		b.setFinalList(finalList);
 		b.testalloc();
 		System.out.println("The final list size is "+finalList.size());
-		/*if (b.getFinalFinishTime() < finalFinishTime){
-			finalFinishTime = b.getFinalFinishTime();
-			finalList.clear();
-			finalList = b.getFinalList();
-		}*/
 		
 		
 		System.out.println("\n");
-		//bab2.setFinalList(finalList);
-		//ArrayList<ArrayList<Node>> perm = bab2.permutation();
-		//System.out.println("The two array is "+perm.size());
-		//bab2.testalloc();
-		/*for (ArrayList<Node> array : perm){
-			BranchAnBound b = new BranchAnBound(numProc, array);
-			b.setFinalList(finalList);
-			b.testalloc();
-			System.out.println("The final list size is "+finalList.size());
-			if (b.getFinalFinishTime() < finalFinishTime){
-				finalFinishTime = b.getFinalFinishTime();
-				finalList.clear();
-				finalList = b.getFinalList();
-			}
-			
-			for (Node node:array){
-				System.out.print(node.getName()+" ");
-				
-			}
-			System.out.println("\n");
-		}*/
-		System.out.println("The final list size is "+finalList.size());
+	
 		for (Node node:finalList){
 			System.out.println("The final node is "+node.getName()+" and the final processor is "+node.getProcessor());
 		}

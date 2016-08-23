@@ -88,6 +88,7 @@ public class IDAStar implements Scheduler {
 		// if greater than cut off, we only store the next cut off, no need to actually traverse it
 		if (f > fCutOff ){
 			if(f < nextCutOff || nextCutOff == -1){
+				System.out.println(f);
 				nextCutOff = f;
 			}
 			return false;
@@ -118,7 +119,7 @@ public class IDAStar implements Scheduler {
 			// If we need to visualize update the visuals
 			if(isVisual){
 				node.incFrequency();
-				System.out.println("The added node is "+node.getName()+" and the frequency is "+node.getFrequency());
+				//System.out.println("The added node is "+node.getName()+" and the frequency is "+node.getFrequency());
 				visualDag.update(node);
 			}
 			// if the current node is a leaf (i.e. an ending task) AND there are no more tasks
