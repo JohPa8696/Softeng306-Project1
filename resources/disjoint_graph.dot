@@ -1,20 +1,20 @@
 digraph "disjoint_graph" {
 	a -> b	 [Weight=20];
-	a	 [Weight=4];
-	b	 [Weight=7];
-	c	 [Weight=6];
-	a -> c	 [Weight=2];
+	a	 [Weight=20];
+	b	 [Weight=30];
+	c	 [Weight=15];
+	a -> c	 [Weight=35];
 	d	 [Weight=2];
-	b -> d	 [Weight=15];
+	b -> d	 [Weight=23];
 	b -> e	 [Weight=5];
-	e	 [Weight=10];
-	c -> e	 [Weight=7];
-	g -> i	 [Weight=12];
-	g	 [Weight=21];
-	i	 [Weight=7];
-	h	 [Weight=10];
+	e	 [Weight=23];
+	c -> e	 [Weight=22];
+	g -> i	 [Weight=25];
+	g	 [Weight=40];
+	i	 [Weight=25];
+	h	 [Weight=28];
 	g -> h	 [Weight=15];
-	j	 [Weight=20];
+	j	 [Weight=21];
 	h -> j	 [Weight=15];
 	i -> j	 [Weight=5];
 }

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import output_processor.OutputProcessor;
-import schedulers.BranchAnBound;
 import schedulers.IDAStar;
 import schedulers.Scheduler;
 import schedulers.SimpleScheduler;
