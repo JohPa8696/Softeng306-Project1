@@ -1,12 +1,8 @@
 node{
     fill-mode : dyn-plain;
-
-   
-
     size : 75px;
     text-size : 30px;
     fill-color : white,black,yellow;
-
     text-alignment:center;
     text-color:blue;
     stroke-mode:plain;
