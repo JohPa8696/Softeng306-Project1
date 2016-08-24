@@ -107,7 +107,7 @@ public class Dag {
 		}
 		
 		
-		g.getNode(n.getName()).setAttribute("ui.color", 1);
+		//g.getNode(n.getName()).setAttribute("ui.color", 1);
 		
 	}
 	public void updateProcGraph(Node n){
