@@ -24,7 +24,7 @@ Optional:
 Authors
 -------------
 
-Name				ID			Username	Github ID	
+Name            ID        Username  Github ID	
 --------------------------------------------------------				
 Kelvin Lau			9682466		klau158		klevinlaughs
 Xiaohui Lin			8586122		xlin504		xlin504
