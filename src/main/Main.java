@@ -47,7 +47,7 @@ public class Main {
 		// Sets up JFrames for visualization
 		if (ip.getVisualisation()) {
 			for (int i = 0; i < ip.getNumThread(); i++) {
-				frames.add(new JFrame("Processor: " + i));
+				frames.add(new JFrame("Running on processor: " + (i+1)));
 				if (i > 0) {
 					frames.get(i).setLocation(
 							frames.get(i - 1).getX()
@@ -105,6 +105,9 @@ public class Main {
 				}
 			}
 		}
+		
+		long EndTime = System.currentTimeMillis();
+		System.out.print(EndTime - StartTime);
 
 		// Create output file
 		if (ip.getOutputFileName() != null) {
@@ -123,8 +126,6 @@ public class Main {
 
 		}
 
-		long EndTime = System.currentTimeMillis();
-		System.out.print(EndTime - StartTime);
 
 	}
 }
