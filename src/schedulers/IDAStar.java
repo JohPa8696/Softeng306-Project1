@@ -385,5 +385,9 @@ public class IDAStar implements Scheduler {
 		this.isVisual = true;
 		this.visualDag = visualDag;
 	}
+	
+	public Dag getDag(){
+		return visualDag;
+	}
 
 }

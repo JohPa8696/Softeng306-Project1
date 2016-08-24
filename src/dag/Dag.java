@@ -47,7 +47,7 @@ public class Dag implements ViewerListener{
 	/**
 	 * Create a visualized DAG graph and processor graph.
 	 */
-	public void createDag(){
+	public Graph createDag(){
 		System.setProperty("gs.ui.renderer",
                 "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		g.addAttribute("ui.stylesheet", "url('resources/style.css')");
@@ -72,7 +72,7 @@ public class Dag implements ViewerListener{
 		}
 		g.setStrict(false);
 		g.setAutoCreate(true);
-		g.display();
+		//g.display();
 		// Add label of the node
 		for (org.graphstream.graph.Node node : g) {
 	        node.addAttribute("ui.label", node.getId());
@@ -91,6 +91,8 @@ public class Dag implements ViewerListener{
 	    }
 		proc_graph.setStrict(false);
 		proc_graph.setAutoCreate(true);
+		
+		return g;
 	}
 	/**
 	 * Create a processor graph which shows the order and the allocation of the node. User could 

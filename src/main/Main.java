@@ -13,16 +13,25 @@ import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
 
+import org.graphstream.ui.swingViewer.*;
+import org.graphstream.ui.view.*;
+import org.graphstream.graph.*;
+
+import javax.swing.*;
+import java.awt.*;
 /**
  * This class implements an application that finds a schedules with the shortest
  * schedule length
  *
  */
 public class Main {
-
+	
+	
 	public static void main(String[] args) throws FileNotFoundException,
 			UnsupportedEncodingException, InvalidArgumentException {
-
+		
+		ArrayList<JFrame> frames = new ArrayList<>();
+		
 		long StartTime = System.currentTimeMillis();
 		Dag dag = null;
 		ArrayList<Node> list = new ArrayList<Node>();
@@ -35,10 +44,21 @@ public class Main {
 		list = ip.getGraph();
 		available = ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
-		
+
+		if(ip.getVisualisation()){
+			for(int i =0; i< ip.getNumThread(); i++){
+				frames.add(new JFrame("Processor: " + i));
+				if (i >0){
+					frames.get(i).setLocation(frames.get(i-1).getX()+frames.get(i-1).getWidth(),frames.get(i-1).getY());
+				}
+				frames.get(i).setSize(450,600);
+				
+			}
+		}
 		int numThreads =  ip.getNumThread();
 		ArrayList<Thread> threadList = new ArrayList<Thread>(numThreads);
 		ArrayList<Scheduler> schedulerList = new ArrayList<Scheduler>(numThreads);
+		
 		
 		// Creates Schedule for num threads and start them
 		for (int i=0; i < numThreads; i++){
@@ -47,9 +67,13 @@ public class Main {
 			
 			// visuals are displayed if set to true
 			if (ip.getVisualisation()) {
+
 				dag = new Dag(list, numProc);
-				dag.createDag();
-				
+				Viewer viewer = new Viewer(dag.createDag(),Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+				View view = viewer.addDefaultView(false);
+				frames.get(i).add((Component) view);
+				frames.get(i).setVisible(true);
+				viewer.enableAutoLayout();
 				s.setVisual(dag);
 			}
 			
@@ -80,8 +104,10 @@ public class Main {
 		}
 
 		if (ip.getVisualisation()){
-			dag.createProcessorGraph();
+			s.getDag().createProcessorGraph();
+
 		}
+
 		// Create output file
 		if (ip.getOutputFileName() != null) {
 			OutputProcessor op = new OutputProcessor(ip.getFileName(),
