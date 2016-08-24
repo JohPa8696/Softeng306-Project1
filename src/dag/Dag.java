@@ -185,11 +185,11 @@ public class Dag implements ViewerListener{
 		// TODO Auto-generated method stub
 		try{
 			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
-				proc_graph.getNode(id).addAttribute("ui.label", proc_graph.getNode(id).getAttribute("Time"));
+				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Time"));
 				proc_graph.getNode(id).addAttribute("Clicked",false);
 				
 			}else{
-				proc_graph.getNode(id).addAttribute("ui.label", proc_graph.getNode(id).getAttribute("Name"));
+				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Name"));
 				proc_graph.getNode(id).addAttribute("Clicked",true);
 			}
 		}catch(NullPointerException e){}
