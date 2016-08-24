@@ -112,8 +112,11 @@ public class Dag {
 		/*if (prevNode == null){
 			prevNode = n;
 		}else{
-			g.getNode(prevNode.getName()).removeAttribute("ui.class");
+			int freq = n.getFrequency();
+			double color = (freq/100000.0)*0.5;
+			g.getNode(prevNode.getName()).setAttribute("ui.color", color);
 			prevNode = n;
+
 		}*/
 		int freq = n.getFrequency();
 		double color = freq/100000.0;
@@ -123,8 +126,9 @@ public class Dag {
 
 		//g.getNode(n.getName()).addAttribute("ui.class", "active");
 
-		
-	}
+
+		}
+	
 	public void updateProcGraph(Node n){
 		int proc = n.getProcessor();
 		String name = n.getName();
