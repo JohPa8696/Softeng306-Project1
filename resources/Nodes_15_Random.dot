@@ -17,13 +17,10 @@ digraph "Nodes_15_Random"{
 	p	 [Weight=13];
 	a -> b	 [Weight=7];
 	a -> c	 [Weight=12];
-	c -> e	 [Weight=20];
 	d -> e	 [Weight=15];
 	d -> f	 [Weight=10];
-	f -> h	 [Weight=12];
 	g -> h	 [Weight=7];
 	g -> i	 [Weight=5];
-	i -> k	 [Weight=7];
 	j -> k	 [Weight=13];
 	m -> n	 [Weight=20];
 }
