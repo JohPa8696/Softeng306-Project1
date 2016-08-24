@@ -108,8 +108,6 @@ public class Dag implements ViewerListener{
 		while (looped){
 			fromViewer.pump();
 		}
-
-
 	}
 	/**
 	 * @param node
@@ -142,11 +140,14 @@ public class Dag implements ViewerListener{
 
 			g.getNode(n.getName()).setAttribute("ui.color", 1);
 		}
-		//
-
-		
 	}
-	
+	public void setRoot(Node n){
+		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: green;");
+	}
+	public void unRoot(Node n){
+		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: white,black,yellow;");
+		g.getNode(n.getName()).setAttribute("ui.color", 0);
+	}
 	/**
 	 * @param n - Passing the node which is determined
 	 * Update the processor graph and store the information inside the node.
