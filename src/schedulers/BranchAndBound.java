@@ -3,19 +3,16 @@ package schedulers;
 import node.Node;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
-import dag.Dag;
+
 
 /**
- * Class: Algorithm
- * Description: Create branch and bound algorithm to solve the problem
- * Variable: numProc (number of processor)
+ * Class:BranchAndBound
+ * Description: Create branch and bound algorithm to test if the schedule produced from ida*
+ * is optimal. Brute Force approach. Takes 2 min to run 11 node with 4 proc.
+ * 
  * @Author Jack Wong
  * Date: 05/08/16
  */
@@ -119,31 +116,20 @@ public class BranchAndBound {
     public void testalloc(){
     	
     	do{
-    		System.out.println("The ultimate finish time of this permutation is "+finalFinishTime);
+    		System.out.println("The ultimate finish time is "+finalFinishTime);
     		for(int i = 0;i<currProcAlloc.length;i++){
     			System.out.print(currProcAlloc[i]);
     			list.get(i).setProcessor(currProcAlloc[i]);
     		}
-    		System.out.println();
-    		System.out.println("The final finish time is "+getFinishTime(list));
+    		System.out.println("\n");
+    		//System.out.println("The final finish time is "+getFinishTime(list));
     		
     		
-    		System.out.println(" \n");
+    		//System.out.println(" \n");
     		int h = getFinishTime(list);
     		
-    		/*for (Node node:list){
-    			System.out.println("The set processor of "+node.getName()+" is set to be "+node.getProcessor());
-    		}*/
-    		/*if (cut && currentIndex>=1 && currProcAlloc[currentIndex-1]<numProc){
-    			currProcAlloc[currentIndex-1] += 1;
-    			for (int i = currProcAlloc.length-1;i>=currentIndex;i--){
-    				currProcAlloc[i] = 1;
-    			}
-    		}else{
-    			incAlloc(currProcAlloc.length-1, currProcAlloc);
-    		}*/
-    		
-    		if (cut && currentIndex>=1){
+    		    		
+    		/*if (cut && currentIndex>=1){
     			if (currProcAlloc[currentIndex]<numProc){
     				currProcAlloc[currentIndex]+=1;
     				for (int i = currProcAlloc.length-1;i>currentIndex;i--){
@@ -165,8 +151,8 @@ public class BranchAndBound {
     			}
     		}else{
     			incAlloc(currProcAlloc.length-1, currProcAlloc);
-    		}
-    		
+    		}*/
+    		incAlloc(currProcAlloc.length-1, currProcAlloc);
     	}while(testProc());
     	
     }
@@ -222,16 +208,16 @@ public class BranchAndBound {
 				
 				
 			}
-			if (finishTime>finalFinishTime){
+			/*if (finishTime>finalFinishTime){
 				System.out.print("The current index is "+index);
 				cut = true;
 				currentIndex = index;
 				return finalFinishTime;
-			}
+			}*/
 			
 			index++;
 			returnList.add(node);
-			//System.out.println("The current node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
+			
 		}
 		if (finalFinishTime > lastFinishTime){
 			finalFinishTime = lastFinishTime;
@@ -260,11 +246,7 @@ public class BranchAndBound {
 	public void setFinalList(ArrayList<Node> finalList){
 		this.finalList = finalList;
 	}
-	public ArrayList<Node> getFinalList(){
-		/*for (Node node:finalList){
-			System.out.println("The current node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
-		}*/
-		
+	public ArrayList<Node> getFinalList(){	
 		return finalList;
 	}
 }
