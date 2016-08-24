@@ -40,14 +40,12 @@ public class IDAStar implements Scheduler {
 		
 		this.dag = new ArrayList<Node>(dag.size());
 		copyData(this.dag, dag);
-		//this.dag = dag;
 		
 		this.nextAvailableNodes = new ArrayList<Boolean>(nextAvailableNodes.size());
 		for (int i = 0; i < nextAvailableNodes.size(); i++){
 			this.nextAvailableNodes.add(nextAvailableNodes.get(i) || false);
 		}
 		
-		//this.nextAvailableNodes = nextAvailableNodes;
 		this.numProc = numProc;
 
 		scheduledNodes = new ArrayList<Boolean>(this.dag.size());
@@ -159,7 +157,7 @@ public class IDAStar implements Scheduler {
 
 		int nodeStartTime = getStartTime(node, pNo);
 
-		int g = nodeStartTime /* + node.getWeight() */;
+		int g = nodeStartTime;
 		int h = getHValue(node);
 		int f = g + h;
 
@@ -223,12 +221,13 @@ public class IDAStar implements Scheduler {
 					}
 				}
 
-				// only copy if current solution has better finish time
+				// only copy if current solution has better finish time (in case of multiple entry points)
 				if (bestFinishTime > currentFinishTime || bestFinishTime == -1) {
 					bestFinishTime = currentFinishTime;
 					visualCopy(bestSchedule, dag);
 				}
 
+				// set is solved immediately so all threads know a solution is found
 				isSolved = true;
 				return isSolved;
 			} else {
@@ -236,8 +235,21 @@ public class IDAStar implements Scheduler {
 				boolean isSuccessful = false;
 				for (int i = 0; i < nextAvailableNodes.size(); i++) {
 					if (nextAvailableNodes.get(i)) {
+						
+						// used for pruning by avoiding duplicate node expansion for empty procs
+						boolean zeroChecked = false;
+						
 						for (int j = 1; j <= numProc; j++) {
+							
+							if (zeroChecked)
+								continue;
+							
+							// empty proc found, set zeroChecked to true and expand
+							if (procFinishTimes.get(j - 1).isEmpty())
+								zeroChecked = true;
+							
 							isSuccessful = buildTree(dag.get(i), j);
+							
 							if (isSuccessful)
 								break;
 						}
