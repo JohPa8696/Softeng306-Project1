@@ -109,25 +109,23 @@ public class Dag {
 	 */
 	public void update(Node n){
 		// TODO update the visuals of the dag
-		/*if (prevNode == null){
+		if (prevNode == null){
 			prevNode = n;
-		}else{
-			int freq = n.getFrequency();
-			double color = (freq/100000.0)*0.5;
+		}else if(!n.getName().equals(prevNode.getName())){
+			int freq = prevNode.getFrequency();
+			double color = (freq/2000000.0);
+			if (color > 0.5){
+				color = 0.5;
+			}
 			g.getNode(prevNode.getName()).setAttribute("ui.color", color);
 			prevNode = n;
 
-		}*/
-		int freq = n.getFrequency();
-		double color = freq/100000.0;
-		g.getNode(n.getName()).setAttribute("ui.color", color);
-
-		//g.getNode(n.getName()).setAttribute("ui.style", "fill-color: yellow,red;");
-
-		//g.getNode(n.getName()).addAttribute("ui.class", "active");
-
-
+			g.getNode(n.getName()).setAttribute("ui.color", 1);
 		}
+		//
+
+		
+	}
 	
 	public void updateProcGraph(Node n){
 		int proc = n.getProcessor();
