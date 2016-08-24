@@ -103,11 +103,6 @@ public class Main {
 			}
 		}
 
-		if (ip.getVisualisation()){
-			s.getDag().createProcessorGraph();
-
-		}
-
 		// Create output file
 		if (ip.getOutputFileName() != null) {
 			OutputProcessor op = new OutputProcessor(ip.getFileName(),
@@ -118,7 +113,12 @@ public class Main {
 					s.getSchedule());
 			op.processOutput();
 		}
+		
+		if (ip.getVisualisation()){
+			s.getDag().createProcessorGraph();
 
+		}
+		
 		long EndTime = System.currentTimeMillis();
 		System.out.print(EndTime - StartTime);
 
