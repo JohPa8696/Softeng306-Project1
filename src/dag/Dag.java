@@ -101,13 +101,13 @@ public class Dag {
 			prevNode = n;
 		}else{
 			int freq = n.getFrequency();
-			double color = (freq/100000.0)*0.5;
+			double color = 0.5/(freq/100000.0);
 			g.getNode(prevNode.getName()).setAttribute("ui.color", color);
 			prevNode = n;
 		}
 		
 		
-		g.getNode(n.getName()).setAttribute("ui.color", 1);
+		g.getNode(n.getName()).setAttribute("ui.color", 0.9);
 		
 	}
 	public void updateProcGraph(Node n){
