@@ -1,0 +1,19 @@
+digraph "5childs" {
+	a -> b	 [Weight=20];
+	a	 [Weight=20];
+	b	 [Weight=25];
+	c	 [Weight=50];
+	a -> c	 [Weight=17];
+	d	 [Weight=67];
+	e	 [Weight=40];
+	f	 [Weight=30];
+	g	 [Weight=29];
+	a -> d	 [Weight=15];
+	a -> e	 [Weight=18];
+	a -> f	 [Weight=25];
+	b -> g	 [Weight=10];
+	d -> g	 [Weight=12];
+	c -> g	 [Weight=15];
+	e -> g	 [Weight=20];
+	f -> g	 [Weight=12];
+}
