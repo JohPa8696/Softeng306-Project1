@@ -1,4 +1,4 @@
-digraph "5branches" {
+digraph "10branches" {
 	a -> b	 [Weight=20];
 	a	 [Weight=20];
 	b	 [Weight=25];
@@ -7,13 +7,26 @@ digraph "5branches" {
 	d	 [Weight=67];
 	e	 [Weight=40];
 	f	 [Weight=30];
+	h	 [Weight=45];
+	k	 [Weight=12];
+	j	 [Weight=23];
+	m	 [Weight=60];
 	g	 [Weight=29];
 	a -> d	 [Weight=15];
 	a -> e	 [Weight=18];
 	a -> f	 [Weight=25];
+	a -> h	 [Weight=20];
+	a -> k	 [Weight=23];
+	a -> j	 [Weight=30];
+	a -> m	 [Weight=12];
 	b -> g	 [Weight=10];
 	d -> g	 [Weight=12];
 	c -> g	 [Weight=15];
 	e -> g	 [Weight=20];
 	f -> g	 [Weight=12];
+	h -> g	 [Weight=10];
+	k -> g	 [Weight=12];
+	j -> g	 [Weight=15];
+	m -> g	 [Weight=20];
+
 }
