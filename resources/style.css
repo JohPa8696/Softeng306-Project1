@@ -1,15 +1,14 @@
 node{
     fill-mode : dyn-plain;
-    size : 50px;
-    text-size : 30px;
+    size : 90px;
+    text-size : 20px;
     fill-color : white,black;
     text-alignment:center;
+    text-color:blue;
     stroke-mode:plain;
     stroke-color:blue;
 }
-node.final{
-	text-size : 15px;
-}
+
 node.Processor{
 	shape:diamond;
 	fill-color: yellow;
@@ -17,10 +16,15 @@ node.Processor{
 	text-alignment:center;
 	stroke-mode:plain;
     stroke-color:blue;
+  
 }
 edge{
 	
 }
 graph{
 	fill-color:#F1DDCF;
+	
+}
+graph.ProcessorGraph{
+	visibility-mode:hidden;
 }
