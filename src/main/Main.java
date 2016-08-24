@@ -55,6 +55,11 @@ public class Main {
 		
 		// start schedule
 		s.schedule();
+		
+		if(ip.getVisualisation()){
+			dag.createProcessorGraph();
+			
+		}
 
 		// Create output file
 		if(ip.getOutputFileName() != null){
