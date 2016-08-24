@@ -162,7 +162,7 @@ public class Dag implements ViewerListener{
 		//System.out.println(n.getName());
 		proc_graph.getNode(name).addAttribute("ui.label", name);
 		proc_graph.getNode(name).setAttribute("Name", n.getName());
-		proc_graph.getNode(name).setAttribute("Time", n.getStartTime()+"-"+n.getFinishTime());
+		proc_graph.getNode(name).setAttribute("Time", "S:"+n.getStartTime()+" F:"+n.getFinishTime());
 		proc_graph.getNode(name).setAttribute("Clicked", true);
 		
 		//System.out.println(proc_graph.getNode(n.getName()).getId());
