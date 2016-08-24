@@ -27,6 +27,8 @@ public class IDAStar implements Scheduler {
 
 	private boolean isVisual = false;
 	private Dag visualDag;
+	private int refresh_rate = 25000;
+	private int refresh_value=0;
 
 	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
 			int numProc, int numThreads) {
@@ -88,17 +90,14 @@ public class IDAStar implements Scheduler {
 				for (Stack<Node> s : procFinishTimes) {
 					s.clear();
 				}
-				
 
 				boolean isSolved = false;
 				while (!isSolved) {
 					System.out.println("fCutOff = " + fCutOff);
 					isSolved = buildTree(dag.get(i), 1);
-					
 					fCutOff = nextCutOff;
 					nextCutOff = -1;
 				}
-				
 			}
 		}
 	}
@@ -129,14 +128,17 @@ public class IDAStar implements Scheduler {
 			}
 			return false;
 		} else {
-			
+
 			// If we need to visualize update the visuals
 			if (isVisual && node.getName()!=null) {
 				node.incFrequency();
-				//System.out.println(node.getName()+" and the processor is "+node.getProcessor());
+				if(refresh_value >= refresh_rate){
+					visualDag.update(node);
+				}else if(isVisual){
+					refresh_value++;
+				}
 				//System.out.println("The added node is " + node.getName()
 						//+ " and the frequency is " + node.getFrequency()+" and the processor is "+node.getProcessor());
-				visualDag.update(node);
 			}
 
 			node.setStartTime(nodeStartTime);
@@ -144,7 +146,6 @@ public class IDAStar implements Scheduler {
 			node.setProcessor(pNo);
 
 			scheduledNodes.set(node.getIndex(), true);
-			
 
 			procFinishTimes.get(pNo - 1).push(node);
 			nextAvailableNodes.set(node.getIndex(), false);
@@ -196,25 +197,17 @@ public class IDAStar implements Scheduler {
 				for (int i = 0; i < nextAvailableNodes.size(); i++) {
 					if (nextAvailableNodes.get(i)) {
 						for (int j = 1; j <= numProc; j++) {
-							//System.out.println(dag.get(i).getName()+" and the processor is "+dag.get(i).getProcessor());
 							isSuccessful = buildTree(dag.get(i), j);
-							
 							if (isSuccessful)
-								
 								break;
 						}
 						if (isSuccessful)
-							/*if (isVisual){
-								//System.out.println(dag.get(i).getName()+" and the processor is "+dag.get(i).getProcessor());
-								visualDag.updateProcGraph(dag.get(i));
-							}*/
-							
 							break;
 					}
 				}
 
 				scheduledNodes.set(node.getIndex(), false);
-				
+
 				// backtrack the procFinishTime
 				procFinishTimes.get(pNo - 1).pop();
 
