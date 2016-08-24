@@ -247,4 +247,15 @@ public class InputProcessor implements TaskReader{
 		public String getFileName(){
 			return this.fileName;
 		}
+
+		public int getNumProc() {return numProc;}
+
+		public void setNumProc(int numProc) {
+			this.numProc = numProc;
+		}
+
+		public int getNumThread() {return numThread;}
+
+		public void setNumThread(int numThread) {this.numThread = numThread;}
+		
 }
