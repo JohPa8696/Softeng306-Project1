@@ -20,6 +20,7 @@ node.Processor{
 	text-alignment:center;
 	stroke-mode:plain;
     stroke-color:blue;
+    
   
 }
 edge{
@@ -31,4 +32,8 @@ graph{
 }
 graph.ProcessorGraph{
 	visibility-mode:hidden;
+}
+node:clicked{
+	fill-color:red;
+	
 }

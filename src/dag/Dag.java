@@ -1,6 +1,7 @@
 package dag;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,6 +12,12 @@ import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.view.ViewerListener;
+import org.graphstream.ui.view.ViewerPipe;
+import org.graphstream.ui.view.util.MouseManager;
 
 
 /**
@@ -18,7 +25,7 @@ import org.graphstream.graph.implementations.*;
  * Create a DAG based on the input.dot file
  * 
  */
-public class Dag {
+public class Dag implements ViewerListener{
 	/**
 	 * Stores every node from the input.dot file
 	 */
@@ -28,6 +35,9 @@ public class Dag {
 	private int numProc;
 	private Node prevNode = null;
 	private ArrayList<Node> procList;
+	private Viewer viewer;
+	private boolean looped = true;
+
 	
 	public Dag(ArrayList<Node> nodelist,int numProc){
 		this.nodelist = nodelist;
@@ -38,6 +48,7 @@ public class Dag {
 		for (int i=0;i<numProc;i++){
 			procList.add(null);
 		}
+		
 	}
 	/**
 	 * Create a visualized DAG graph
@@ -89,7 +100,16 @@ public class Dag {
 	}
 	public void createProcessorGraph(){
 		
-		proc_graph.display();
+		viewer = proc_graph.display();
+		viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+		ViewerPipe fromViewer = viewer.newViewerPipe();
+		fromViewer.addViewerListener(this);
+		fromViewer.addSink(proc_graph);
+		while (looped){
+			fromViewer.pump();
+		}
+
+
 	}
 	/**
 	 * @param node
@@ -133,9 +153,12 @@ public class Dag {
 		//System.out.println(procList.size());
 		
 		proc_graph.addNode(name);
-		
+	
 		//System.out.println(n.getName());
 		proc_graph.getNode(name).addAttribute("ui.label", name);
+		proc_graph.getNode(name).setAttribute("Name", n.getName());
+		proc_graph.getNode(name).setAttribute("Start", n.getStartTime());
+		proc_graph.getNode(name).setAttribute("Clicked", true);
 		
 		//System.out.println(proc_graph.getNode(n.getName()).getId());
 		if (procList.get(proc-1)==null){
@@ -165,4 +188,33 @@ public class Dag {
 			}
 		}*/
 	}
+	@Override
+	public void buttonPushed(String id) {
+		// TODO Auto-generated method stub
+		try{
+			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
+				proc_graph.getNode(id).addAttribute("ui.label", "Start Time: "+proc_graph.getNode(id).getAttribute("Start"));
+				proc_graph.getNode(id).addAttribute("Clicked",false);
+				
+			}else{
+				proc_graph.getNode(id).addAttribute("ui.label", proc_graph.getNode(id).getAttribute("Name"));
+				proc_graph.getNode(id).addAttribute("Clicked",true);
+			}
+		}catch(NullPointerException e){}
+		
+		
+	}
+	@Override
+	public void buttonReleased(String id) {
+		// TODO Auto-generated method stub
+		
+	
+
+	}
+	@Override
+	public void viewClosed(String arg0) {
+		// TODO Auto-generated method stub
+		looped = false;
+	}
+	
 }
