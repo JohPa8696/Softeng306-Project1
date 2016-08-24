@@ -134,6 +134,7 @@ public class IDAStar implements Scheduler {
 				node.incFrequency();
 				if(refresh_value >= refresh_rate){
 					visualDag.update(node);
+					refresh_value = 0;
 				}else if(isVisual){
 					refresh_value++;
 				}
