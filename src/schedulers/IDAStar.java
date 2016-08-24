@@ -27,6 +27,8 @@ public class IDAStar implements Scheduler {
 	private int fCutOff = 0;
 	private ArrayList<Node> bestSchedule;
 	private int bestFinishTime = -1;
+	private int totalComputationTime =0;
+	private int idleTime = 0;
 
 	private boolean isVisual = false;
 	private Dag visualDag;
@@ -40,14 +42,12 @@ public class IDAStar implements Scheduler {
 		
 		this.dag = new ArrayList<Node>(dag.size());
 		copyData(this.dag, dag);
-		//this.dag = dag;
 		
 		this.nextAvailableNodes = new ArrayList<Boolean>(nextAvailableNodes.size());
 		for (int i = 0; i < nextAvailableNodes.size(); i++){
 			this.nextAvailableNodes.add(nextAvailableNodes.get(i) || false);
 		}
 		
-		//this.nextAvailableNodes = nextAvailableNodes;
 		this.numProc = numProc;
 
 		scheduledNodes = new ArrayList<Boolean>(this.dag.size());
@@ -73,9 +73,17 @@ public class IDAStar implements Scheduler {
 				calculateH(n, 0);
 			}
 		}
+
+		getTotalComputationTime();
 		
 		for(int i=0; i< hValues.size();i++){
 			System.out.println("heuristic of "+dag.get(i).getName() +" is " + hValues.get(i));
+		}
+	}
+	
+	private void getTotalComputationTime(){
+		for (int i=0; i<dag.size(); i++){
+			totalComputationTime += dag.get(i).getWeight();
 		}
 	}
 	
@@ -92,7 +100,6 @@ public class IDAStar implements Scheduler {
 		for (Node parent : n.getParents().keySet()) {
 			calculateH(parent, hTemp);
 		}
-
 	}
 
 	@Override
@@ -106,7 +113,7 @@ public class IDAStar implements Scheduler {
 			if (nextAvailableNodes.get(i)) {
 
 				// get initial f cut off for starting node
-				fCutOff = getHValue(dag.get(i));
+				fCutOff = Math.max(getHValue(dag.get(i)), totalComputationTime);
 
 				// reset procFinishTimes
 				for (Stack<Node> s : procFinishTimes) {
@@ -127,7 +134,7 @@ public class IDAStar implements Scheduler {
 					}
 
 					buildTree(dag.get(i), 1);
-					while (true){
+					while (!isSolved){
 						try {
 							fCutOff = fCutOffQueue.take();
 							if (!finishedFCutOffList.contains(fCutOff)) break;
@@ -158,11 +165,25 @@ public class IDAStar implements Scheduler {
 			return true;
 
 		int nodeStartTime = getStartTime(node, pNo);
-
-		int g = nodeStartTime /* + node.getWeight() */;
+		int currentIdleTime = 0;
+				
+		int g = nodeStartTime;
 		int h = getHValue(node);
-		int f = g + h;
+		int fBottomLevel = g + h;
+		
+		//current idle time is just for this iteration
+		
+		if (procFinishTimes.get(pNo - 1).isEmpty()){
+			currentIdleTime = nodeStartTime;
+		} else {
+			currentIdleTime = nodeStartTime - procFinishTimes.get(pNo - 1).peek().getFinishTime();
+		}
+		idleTime += currentIdleTime;
+		int fIdle = (totalComputationTime + idleTime)/numProc;
 
+		//use the max of either bottom level f or idle time f as our cost function
+		int f = Math.max(fBottomLevel, fIdle);
+		
 		// if greater than cut off, we only store the next cut off, no need to
 		// actually traverse it
 		if (f > fCutOff) {
@@ -170,6 +191,8 @@ public class IDAStar implements Scheduler {
 			// add f cut off values to a priority queue
 				fCutOffQueue.put(f);
 			}
+			//subtract currentIdleTime from totalIdleTime
+			idleTime -= currentIdleTime;
 			return false;
 
 		} else {
@@ -258,7 +281,9 @@ public class IDAStar implements Scheduler {
 
 				// set current node to available as we traverse back up
 				nextAvailableNodes.set(node.getIndex(), true);
-
+				
+				// subtract current idle time from total idle time
+				idleTime -= currentIdleTime;
 				return isSuccessful;
 			}
 		}
