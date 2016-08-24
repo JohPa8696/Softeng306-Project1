@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import dag.Dag;
+
 /**
  * Class: Algorithm
  * Description: Create branch and bound algorithm to solve the problem
@@ -24,6 +26,8 @@ public class BranchAndBound {
 	private int[] maxProcAlloc;
 	private int[] currProcAlloc;
 	private int finalFinishTime = Integer.MAX_VALUE;
+	private int currentIndex;
+	private boolean cut;
 	public BranchAndBound(int numProc,ArrayList<Node> list){
 		this.numProc = numProc;
 		this.list=list;
@@ -37,6 +41,7 @@ public class BranchAndBound {
 				maxProcAlloc[i] = numProc;
 			}
 		}
+		
 	}
 	/**
 	 * Calulate the number of unique permutation for a given number of nodes
@@ -129,7 +134,39 @@ public class BranchAndBound {
     		/*for (Node node:list){
     			System.out.println("The set processor of "+node.getName()+" is set to be "+node.getProcessor());
     		}*/
-    		incAlloc(currProcAlloc.length-1, currProcAlloc);
+    		/*if (cut && currentIndex>=1 && currProcAlloc[currentIndex-1]<numProc){
+    			currProcAlloc[currentIndex-1] += 1;
+    			for (int i = currProcAlloc.length-1;i>=currentIndex;i--){
+    				currProcAlloc[i] = 1;
+    			}
+    		}else{
+    			incAlloc(currProcAlloc.length-1, currProcAlloc);
+    		}*/
+    		
+    		if (cut && currentIndex>=1){
+    			if (currProcAlloc[currentIndex]<numProc){
+    				currProcAlloc[currentIndex]+=1;
+    				for (int i = currProcAlloc.length-1;i>currentIndex;i--){
+        				currProcAlloc[i] = 1;
+        			}
+    			}else{
+    				while(currentIndex !=0 && currProcAlloc[currentIndex]==numProc){
+    					currentIndex-=1;
+    				}
+    				if (currProcAlloc[currentIndex]!=numProc && currentIndex!=0){
+    					currProcAlloc[currentIndex]+=1;
+        				for (int i = currProcAlloc.length-1;i>currentIndex;i--){
+            				currProcAlloc[i] = 1;
+            			}
+    				}else{
+    					break;
+    				}
+    				
+    			}
+    		}else{
+    			incAlloc(currProcAlloc.length-1, currProcAlloc);
+    		}
+    		
     	}while(testProc());
     	
     }
@@ -152,10 +189,13 @@ public class BranchAndBound {
 	public int getFinishTime(ArrayList<Node> nodelist){
 		int[] proc_time = new int[numProc];
 		int lastFinishTime = 0;
+		cut = false;
+		int index = 0;
 		ArrayList<Node> returnList = new ArrayList<Node>();
 		
 		//Loop through all the node in the node list.
 		for (Node node:nodelist){
+			
 			node.setStartTime(proc_time[node.getProcessor()-1]);
 			int startTime = node.getStartTime();
 			int finishTime;
@@ -180,7 +220,16 @@ public class BranchAndBound {
 			if (finishTime > lastFinishTime){
 				lastFinishTime = finishTime;
 				
+				
 			}
+			if (finishTime>finalFinishTime){
+				System.out.print("The current index is "+index);
+				cut = true;
+				currentIndex = index;
+				return finalFinishTime;
+			}
+			
+			index++;
 			returnList.add(node);
 			//System.out.println("The current node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
 		}
@@ -191,23 +240,18 @@ public class BranchAndBound {
 				Node node = new Node(returnList.get(i));
 				finalList.add(node);
 			}
-			//Collections.copy(finalList,returnList);
-			/*finalList.clear();
-			for (int i = 0;i<finalList.size();i++){
-				Node node = returnList.get(i);
-				finalList.add(node);
-			}
-			//finalList.addAll(returnList);*/
-			System.out.println("Hello world");
+			
 		}
-		/*for (Node node:finalList){
-			System.out.println("The current node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
-		}
-		for (Node node:returnList){
-			System.out.println("The return node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
-		}*/
+		
 		return lastFinishTime;
 		
+	}
+	
+	public void setCurrentIndex(int currentIndex){
+		this.currentIndex = currentIndex;
+	}
+	public int getCurrentIndex(){
+		return currentIndex;
 	}
 	public int getFinalFinishTime(){
 		return finalFinishTime;
@@ -220,6 +264,7 @@ public class BranchAndBound {
 		/*for (Node node:finalList){
 			System.out.println("The current node is "+node.getName() + " the start time is "+node.getStartTime()+" and the finishtime is "+node.getFinishTime()+" and the processor is "+node.getProcessor());
 		}*/
+		
 		return finalList;
 	}
 }
