@@ -33,6 +33,8 @@ public class IDAStar implements Scheduler {
 	private int refresh_rate = 25000;
 	private int refresh_value=0;
 
+	private Node root = null;
+	
 	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
 			int numProc) {
 		
@@ -113,6 +115,17 @@ public class IDAStar implements Scheduler {
 
 				while (!isSolved) {
 					System.out.println("fCutOff = " + fCutOff);
+					if(isVisual){
+						if(root == null){
+							visualDag.setRoot(dag.get(i));
+							root = dag.get(i);
+						}else if (!dag.get(i).getName().equals(root.getName())){
+							visualDag.unRoot(root);
+							visualDag.setRoot(dag.get(i));
+							root = dag.get(i);
+						}
+					}
+
 					buildTree(dag.get(i), 1);
 					while (true){
 						try {
@@ -124,6 +137,7 @@ public class IDAStar implements Scheduler {
 					}
 					finishedFCutOffList.add(fCutOff);
 				}
+				
 			}
 		}
 	}
