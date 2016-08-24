@@ -2,15 +2,16 @@ package dag;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import node.Node;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.view.ViewerListener;
+import org.graphstream.ui.view.ViewerPipe;
+
 
 
 /**
@@ -18,7 +19,7 @@ import org.graphstream.graph.implementations.*;
  * Create a DAG based on the input.dot file
  * 
  */
-public class Dag {
+public class Dag implements ViewerListener{
 	/**
 	 * Stores every node from the input.dot file
 	 */
@@ -26,15 +27,25 @@ public class Dag {
 	private Graph g;
 	private Graph proc_graph;
 	private int numProc;
+	private Node prevNode = null;
+	private ArrayList<Node> procList;
+	private Viewer viewer;
+	private boolean looped = true;
+
 	
 	public Dag(ArrayList<Node> nodelist,int numProc){
 		this.nodelist = nodelist;
 		g = new SingleGraph("DAG");
 		proc_graph = new SingleGraph("Processor Graph");
 		this.numProc = numProc;
+		procList = new ArrayList<Node>(numProc);
+		for (int i=0;i<numProc;i++){
+			procList.add(null);
+		}
+		
 	}
 	/**
-	 * Create a visualized DAG graph
+	 * Create a visualized DAG graph and processor graph.
 	 */
 	public void createDag(){
 		System.setProperty("gs.ui.renderer",
@@ -51,9 +62,11 @@ public class Dag {
 				//System.out.println(node.getName() + " 's children is " +child.getName());
 				try{
 					g.addEdge(node.getName()+ child.getName(), node.getName(), child.getName(),true);
+					g.getEdge(node.getName()+ child.getName()).addAttribute("layout.weight", 3);
 				}catch (ElementNotFoundException e){
 					g.addNode(child.getName());
 					g.addEdge(node.getName()+ child.getName(), node.getName(), child.getName(),true);
+					g.getEdge(node.getName()+ child.getName()).addAttribute("layout.weight", 2);
 				}
 			}
 		}
@@ -64,7 +77,9 @@ public class Dag {
 		for (org.graphstream.graph.Node node : g) {
 	        node.addAttribute("ui.label", node.getId());
 	    }
+		
 		proc_graph.addAttribute("ui.stylesheet", "url('resources/style.css')");
+		proc_graph.addAttribute("ui.class", "ProcessorGraph");
 		for (int i=1; i<=numProc;i++){
 			String proc = "P"+i;
 			proc_graph.addNode(proc);
@@ -76,7 +91,23 @@ public class Dag {
 	    }
 		proc_graph.setStrict(false);
 		proc_graph.setAutoCreate(true);
-		proc_graph.display();
+	}
+	/**
+	 * Create a processor graph which shows the order and the allocation of the node. User could 
+	 * click on a node to see the starting time.
+	 */
+	public void createProcessorGraph(){
+		
+		viewer = proc_graph.display();
+		viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+		ViewerPipe fromViewer = viewer.newViewerPipe();
+		fromViewer.addViewerListener(this);
+		fromViewer.addSink(proc_graph);
+		while (looped){
+			fromViewer.pump();
+		}
+
+
 	}
 	/**
 	 * @param node
@@ -86,8 +117,8 @@ public class Dag {
 	public void changeNodeColor(Node node,Color color){
 		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
 		//graphnode.setAttribute("ui.color", color);
-		graphnode.addAttribute("ui.class", "final");
-		graphnode.addAttribute("ui.label", "Processor: "+node.getProcessor());
+		//graphnode.addAttribute("ui.class", "final");
+		graphnode.addAttribute("ui.label", node.getName()+"-"+"Processor: "+node.getProcessor());
 		
 	}
 	/**
@@ -96,28 +127,86 @@ public class Dag {
 	 */
 	public void update(Node n){
 		// TODO update the visuals of the dag
-		int freq = n.getFrequency();
-		double color = freq/100000.0;
-		g.getNode(n.getName()).setAttribute("ui.color", color);
-		
-		
-	}
-	public void updateProcGraph(Node n){
-		proc_graph.addNode(n.getName());
-		//System.out.println(n.getName());
-		proc_graph.getNode(n.getName()).addAttribute("ui.label", n.getName());
-		//System.out.println(proc_graph.getNode(n.getName()).getId());
-		proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
-		try{
-			proc_graph.addNode(n.getName());
-			proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
-		}catch(IdAlreadyInUseException e){
-			//proc_graph.removeEdge("P"+n.getProcessor()+n.getName());
-			//proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
-			Iterable<Edge> edges = proc_graph.getNode(n.getName()).getEachEdge();
-			for (Edge edge : edges){
-				proc_graph.removeEdge(edge);
+		if (prevNode == null){
+			prevNode = n;
+		}else if(!n.getName().equals(prevNode.getName())){
+			int freq = prevNode.getFrequency();
+			double color = (freq/2000000.0);
+			if (color > 0.5){
+				color = 0.5;
 			}
+			g.getNode(prevNode.getName()).setAttribute("ui.color", color);
+			prevNode = n;
+
+			g.getNode(n.getName()).setAttribute("ui.color", 1);
 		}
+		//
+
+		
 	}
+	
+	/**
+	 * @param n - Passing the node which is determined
+	 * Update the processor graph and store the information inside the node.
+	 */
+	public void updateProcGraph(Node n){
+		int proc = n.getProcessor();
+		String name = n.getName();
+		//System.out.println(procList.size());
+		
+		proc_graph.addNode(name);
+	
+		//System.out.println(n.getName());
+		proc_graph.getNode(name).addAttribute("ui.label", name);
+		proc_graph.getNode(name).setAttribute("Name", n.getName());
+		proc_graph.getNode(name).setAttribute("Time", n.getStartTime()+"-"+n.getFinishTime());
+		proc_graph.getNode(name).setAttribute("Clicked", true);
+		
+		//System.out.println(proc_graph.getNode(n.getName()).getId());
+		if (procList.get(proc-1)==null){
+			try{
+				proc_graph.addEdge("P"+proc+name, "P"+proc, name,true);
+				proc_graph.getEdge("P"+n.getProcessor()+n.getName()).addAttribute("layout.weight", 4);
+			}catch(ElementNotFoundException e){
+				
+			}
+			
+		}else{
+			String fromName = procList.get(proc-1).getName();
+			proc_graph.addEdge(fromName+name, fromName, name,true);
+			proc_graph.getEdge(fromName+name).addAttribute("layout.weight", 4);
+		}
+		procList.set(proc-1, n);
+		
+		
+	}
+	@Override
+	public void buttonPushed(String id) {
+		// TODO Auto-generated method stub
+		try{
+			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
+				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Time"));
+				proc_graph.getNode(id).addAttribute("Clicked",false);
+				
+			}else{
+				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Name"));
+				proc_graph.getNode(id).addAttribute("Clicked",true);
+			}
+		}catch(NullPointerException e){}
+		
+		
+	}
+	@Override
+	public void buttonReleased(String id) {
+		// TODO Auto-generated method stub
+		
+	
+
+	}
+	@Override
+	public void viewClosed(String arg0) {
+		// TODO Auto-generated method stub
+		looped = false;
+	}
+	
 }

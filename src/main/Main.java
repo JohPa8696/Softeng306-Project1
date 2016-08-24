@@ -36,8 +36,7 @@ public class Main {
 		available = ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 		
-		//int numThreads =  ip.getNumThreads();
-		int numThreads = 3;
+		int numThreads =  ip.getNumThread();
 		ArrayList<Thread> threadList = new ArrayList<Thread>(numThreads);
 		ArrayList<Scheduler> schedulerList = new ArrayList<Scheduler>(numThreads);
 		

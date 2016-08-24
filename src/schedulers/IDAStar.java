@@ -30,6 +30,8 @@ public class IDAStar implements Scheduler {
 
 	private boolean isVisual = false;
 	private Dag visualDag;
+	private int refresh_rate = 25000;
+	private int refresh_value=0;
 
 	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
 			int numProc) {
@@ -69,9 +71,12 @@ public class IDAStar implements Scheduler {
 				calculateH(n, 0);
 			}
 		}
-
+		
+		for(int i=0; i< hValues.size();i++){
+			System.out.println("heuristic of "+dag.get(i).getName() +" is " + hValues.get(i));
+		}
 	}
-
+	
 	private void calculateH(Node n, int childH) {
 		int hTemp = n.getWeight() + childH;
 
@@ -158,10 +163,14 @@ public class IDAStar implements Scheduler {
 			// If we need to visualize update the visuals
 			if (isVisual && node.getName() != null) {
 				node.incFrequency();
-				// System.out.println("The added node is " + node.getName()
-				// + " and the frequency is " +
-				// node.getFrequency()+" and the processor is "+node.getProcessor());
-				visualDag.update(node);
+				if(refresh_value >= refresh_rate){
+					visualDag.update(node);
+					refresh_value=0;
+				}else if(isVisual){
+					refresh_value++;
+				}
+				//System.out.println("The added node is " + node.getName()
+						//+ " and the frequency is " + node.getFrequency()+" and the processor is "+node.getProcessor());
 			}
 
 			node.setStartTime(nodeStartTime);
