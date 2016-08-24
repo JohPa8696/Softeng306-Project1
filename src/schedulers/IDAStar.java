@@ -113,7 +113,7 @@ public class IDAStar implements Scheduler {
 			if (nextAvailableNodes.get(i)) {
 
 				// get initial f cut off for starting node
-				fCutOff = Math.max(getHValue(dag.get(i)), totalComputationTime);
+				fCutOff = Math.max(getHValue(dag.get(i)), (totalComputationTime/numProc));
 
 				// reset procFinishTimes
 				for (Stack<Node> s : procFinishTimes) {
@@ -246,12 +246,13 @@ public class IDAStar implements Scheduler {
 					}
 				}
 
-				// only copy if current solution has better finish time
+				// only copy if current solution has better finish time (in case of multiple entry points)
 				if (bestFinishTime > currentFinishTime || bestFinishTime == -1) {
 					bestFinishTime = currentFinishTime;
 					visualCopy(bestSchedule, dag);
 				}
 
+				// set is solved immediately so all threads know a solution is found
 				isSolved = true;
 				return isSolved;
 			} else {
@@ -259,8 +260,21 @@ public class IDAStar implements Scheduler {
 				boolean isSuccessful = false;
 				for (int i = 0; i < nextAvailableNodes.size(); i++) {
 					if (nextAvailableNodes.get(i)) {
+						
+						// used for pruning by avoiding duplicate node expansion for empty processors
+						boolean zeroChecked = false;
+						
 						for (int j = 1; j <= numProc; j++) {
+							
+							if (zeroChecked)
+								continue;
+							
+							// empty processors found, set zeroChecked to true and expand
+							if (procFinishTimes.get(j - 1).isEmpty())
+								zeroChecked = true;
+							
 							isSuccessful = buildTree(dag.get(i), j);
+							
 							if (isSuccessful)
 								break;
 						}

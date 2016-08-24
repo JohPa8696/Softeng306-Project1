@@ -17,6 +17,8 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Jack Wong
  * Create a DAG based on the input.dot file
+ * Create a processor graph after the scheduling finish
+ * library: GraphStream
  * 
  */
 public class Dag implements ViewerListener{
@@ -33,6 +35,11 @@ public class Dag implements ViewerListener{
 	private boolean looped = true;
 
 	
+	/**
+	 * @param nodelist
+	 * @param numProc
+	 * Constructor
+	 */
 	public Dag(ArrayList<Node> nodelist,int numProc){
 		this.nodelist = nodelist;
 		g = new SingleGraph("DAG");
@@ -141,6 +148,10 @@ public class Dag implements ViewerListener{
 			g.getNode(n.getName()).setAttribute("ui.color", 1);
 		}
 	}
+	/**
+	 * @param n
+	 * Set the color of the root node as green
+	 */
 	public void setRoot(Node n){
 		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: green;");
 	}
@@ -155,17 +166,16 @@ public class Dag implements ViewerListener{
 	public void updateProcGraph(Node n){
 		int proc = n.getProcessor();
 		String name = n.getName();
-		//System.out.println(procList.size());
 		
 		proc_graph.addNode(name);
-	
-		//System.out.println(n.getName());
+		
+		//Store node name and starting time and finish time inside the node
 		proc_graph.getNode(name).addAttribute("ui.label", name);
 		proc_graph.getNode(name).setAttribute("Name", n.getName());
 		proc_graph.getNode(name).setAttribute("Time", "S:"+n.getStartTime()+" F:"+n.getFinishTime());
 		proc_graph.getNode(name).setAttribute("Clicked", true);
 		
-		//System.out.println(proc_graph.getNode(n.getName()).getId());
+		//update node
 		if (procList.get(proc-1)==null){
 			try{
 				proc_graph.addEdge("P"+proc+name, "P"+proc, name,true);
@@ -180,12 +190,10 @@ public class Dag implements ViewerListener{
 			proc_graph.getEdge(fromName+name).addAttribute("layout.weight", 4);
 		}
 		procList.set(proc-1, n);
-		
-		
 	}
+	
 	@Override
 	public void buttonPushed(String id) {
-		// TODO Auto-generated method stub
 		try{
 			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
 				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Time"));
@@ -195,31 +203,22 @@ public class Dag implements ViewerListener{
 				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Name"));
 				proc_graph.getNode(id).addAttribute("Clicked",true);
 			}
-		}catch(NullPointerException e){}
-		
-		
+		}catch(NullPointerException e){}		
 	}
+	
 	@Override
 	public void buttonReleased(String id) {
-		// TODO Auto-generated method stub
-		
-	
-
 	}
+	
 	@Override
 	public void viewClosed(String arg0) {
-		// TODO Auto-generated method stub
 		looped = false;
 	}
-	@Override
+	
 	public void mouseLeft(String arg0) {
-		// TODO Auto-generated method stub
-		
 	}
-	@Override
-	public void mouseOver(String arg0) {
-		// TODO Auto-generated method stub
-		
+	
+	public void mouseOver(String arg0) {		
 	}
 	
 }
