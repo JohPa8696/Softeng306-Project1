@@ -27,6 +27,7 @@ public class Main {
 		
 		long StartTime = System.currentTimeMillis();
 		
+		Dag dag = null;
 		ArrayList<Node> list= new ArrayList<Node> ();
 		ArrayList<Boolean> available; 
 		int numProc; 
@@ -38,16 +39,20 @@ public class Main {
 		available=ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
 
+		// visuals are displayed if set to true
+		if(ip.getVisualisation()){
+			dag = new Dag(list,numProc);
+			dag.createDag();
+			
+		}
 		// Creates Schedule
 //		Scheduler s = new SimpleScheduler(list);
 		Scheduler s = new IDAStar(list, available, numProc, 1);
 		
-		// visuals are displayed if set to true
 		if(ip.getVisualisation()){
-			Dag dag = new Dag(list,numProc);
-			dag.createDag();
 			s.setVisual(dag);
 		}
+		
 		
 		// start schedule
 		s.schedule();

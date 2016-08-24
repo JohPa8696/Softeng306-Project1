@@ -52,9 +52,11 @@ public class Dag {
 				//System.out.println(node.getName() + " 's children is " +child.getName());
 				try{
 					g.addEdge(node.getName()+ child.getName(), node.getName(), child.getName(),true);
+					g.getEdge(node.getName()+ child.getName()).addAttribute("layout.weight", 3);
 				}catch (ElementNotFoundException e){
 					g.addNode(child.getName());
 					g.addEdge(node.getName()+ child.getName(), node.getName(), child.getName(),true);
+					g.getEdge(node.getName()+ child.getName()).addAttribute("layout.weight", 2);
 				}
 			}
 		}
@@ -87,7 +89,7 @@ public class Dag {
 	public void changeNodeColor(Node node,Color color){
 		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
 		//graphnode.setAttribute("ui.color", color);
-		graphnode.addAttribute("ui.class", "final");
+		//graphnode.addAttribute("ui.class", "final");
 		graphnode.addAttribute("ui.label", node.getName()+"-"+"Processor: "+node.getProcessor());
 		
 	}
@@ -97,19 +99,20 @@ public class Dag {
 	 */
 	public void update(Node n){
 		// TODO update the visuals of the dag
-		if (prevNode == null){
+		/*if (prevNode == null){
 			prevNode = n;
 		}else{
 			g.getNode(prevNode.getName()).setAttribute("ui.style", "fill-color: white,black;");
 			prevNode = n;
-		}
+		}*/
 		int freq = n.getFrequency();
 		double color = freq/100000.0;
 		g.getNode(n.getName()).setAttribute("ui.color", color);
-		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: yellow,red;");
+		//g.getNode(n.getName()).setAttribute("ui.style", "fill-color: yellow,red;");
 		
 	}
 	public void updateProcGraph(Node n){
+		proc_graph.addNode(n.getName());
 		proc_graph.addNode(n.getName());
 		//System.out.println(n.getName());
 		proc_graph.getNode(n.getName()).addAttribute("ui.label", n.getName());
