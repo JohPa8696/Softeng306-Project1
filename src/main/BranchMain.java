@@ -41,6 +41,11 @@ public class BranchMain {
 		
 		b.setFinalList(finalList);
 		b.testalloc();
+		for (Node node:finalList){
+			dag.updateProcGraph(node);
+		}
+		
+		
 		System.out.println("The final list size is "+finalList.size());
 		
 		
@@ -67,7 +72,7 @@ public class BranchMain {
 			OutputProcessor op = new OutputProcessor(ip.getFileName(), finalList);
 			op.processOutput();
 		}
-		
+		dag.createProcessorGraph();
 		
 	}
 	
