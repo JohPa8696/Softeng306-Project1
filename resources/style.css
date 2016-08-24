@@ -2,7 +2,7 @@ node{
     fill-mode : dyn-plain;
     size : 50px;
     text-size : 30px;
-    fill-color : white,black;
+    fill-color : white,black,yellow;
     text-alignment:center;
     stroke-mode:plain;
     stroke-color:blue;
