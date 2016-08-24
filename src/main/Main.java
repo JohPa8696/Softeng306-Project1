@@ -31,7 +31,6 @@ public class Main {
 			UnsupportedEncodingException, InvalidArgumentException {
 		
 		ArrayList<JFrame> frames = new ArrayList<>();
-		
 		long StartTime = System.currentTimeMillis();
 		Dag dag = null;
 		ArrayList<Node> list = new ArrayList<Node>();
@@ -44,7 +43,8 @@ public class Main {
 		list = ip.getGraph();
 		available = ip.getNextAvailableNodes();
 		numProc = ip.getNumberOfProcessors();
-
+		
+		// Sets up JFrames for visualization
 		if(ip.getVisualisation()){
 			for(int i =0; i< ip.getNumThread(); i++){
 				frames.add(new JFrame("Processor: " + i));
@@ -65,9 +65,8 @@ public class Main {
 			Scheduler s = new IDAStar(list, available, numProc);
 			schedulerList.add(s);
 			
-			// visuals are displayed if set to true
+			// Real time visuals are displayed if set to true
 			if (ip.getVisualisation()) {
-
 				dag = new Dag(list, numProc);
 				Viewer viewer = new Viewer(dag.createDag(),Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				View view = viewer.addDefaultView(false);
@@ -114,6 +113,7 @@ public class Main {
 			op.processOutput();
 		}
 		
+		// Show final schedule for visualization
 		if (ip.getVisualisation()){
 			s.getDag().createProcessorGraph();
 
