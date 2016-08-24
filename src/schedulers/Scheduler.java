@@ -6,7 +6,7 @@ import dag.Dag;
 
 import node.Node;
 
-public interface Scheduler {
+public interface Scheduler extends Runnable {
 	
 	public void schedule();
 	public ArrayList<Node> getSchedule();

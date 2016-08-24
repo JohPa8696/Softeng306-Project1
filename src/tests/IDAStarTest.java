@@ -67,7 +67,7 @@ public class IDAStarTest extends TestCase {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, 1);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
@@ -113,7 +113,7 @@ public class IDAStarTest extends TestCase {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, 1);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
@@ -130,8 +130,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);
@@ -144,8 +143,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);
@@ -158,8 +156,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);
@@ -172,8 +169,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);
@@ -200,8 +196,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);
@@ -214,8 +209,7 @@ public class IDAStarTest extends TestCase {
 		ip.processInput();
 		IDAStar s=new IDAStar(ip.getListOfNodes(), 
 				ip.getNextAvailableNodes(),
-				ip.getNumberOfProcessors(), 
-				ip.getNumThread());
+				ip.getNumberOfProcessors());
 		s.schedule();
 		int finishTime=s.getFinishTime();
 		System.out.println(finishTime);

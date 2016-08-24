@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import dag.Dag;
 import node.Node;
@@ -15,13 +16,15 @@ public class IDAStar implements Scheduler {
 	private ArrayList<Boolean> scheduledNodes;
 	private ArrayList<Stack<Node>> procFinishTimes;
 	private ArrayList<Integer> hValues;
+
+	private static volatile PriorityBlockingQueue<Integer> fCutOffQueue = new PriorityBlockingQueue<Integer>();
+	private static volatile ArrayList<Integer> finishedFCutOffList = new ArrayList<Integer>();
 	
-	private int numThreads = 1;
-
+	public static volatile boolean isSolved = false;
+	private static volatile int stopCutOff = -1;
+	
 	private int numProc;
-	private float fCutOff = 0;
-	private float nextCutOff = -1;
-
+	private int fCutOff = 0;
 	private ArrayList<Node> bestSchedule;
 	private int bestFinishTime = -1;
 
@@ -31,35 +34,44 @@ public class IDAStar implements Scheduler {
 	private int refresh_value=0;
 
 	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
-			int numProc, int numThreads) {
-		this.dag = dag;
-		this.nextAvailableNodes = nextAvailableNodes;
+			int numProc) {
+		
+		this.dag = new ArrayList<Node>(dag.size());
+		copyData(this.dag, dag);
+		//this.dag = dag;
+		
+		this.nextAvailableNodes = new ArrayList<Boolean>(nextAvailableNodes.size());
+		for (int i = 0; i < nextAvailableNodes.size(); i++){
+			this.nextAvailableNodes.add(nextAvailableNodes.get(i) || false);
+		}
+		
+		//this.nextAvailableNodes = nextAvailableNodes;
 		this.numProc = numProc;
-		this.numThreads = numThreads;
 
-		scheduledNodes = new ArrayList<Boolean>(dag.size());
+		scheduledNodes = new ArrayList<Boolean>(this.dag.size());
 
-		for (int i = 0; i < dag.size(); i++) {
+		for (int i = 0; i < this.dag.size(); i++) {
 			scheduledNodes.add(false);
 		}
 
-		procFinishTimes = new ArrayList<Stack<Node>>(numProc);
-		for (int i = 0; i < numProc; i++) {
+		procFinishTimes = new ArrayList<Stack<Node>>(this.numProc);
+		for (int i = 0; i < this.numProc; i++) {
 			procFinishTimes.add(new Stack<Node>());
 		}
 
-		bestSchedule = new ArrayList<>(dag.size());
+		bestSchedule = new ArrayList<>(this.dag.size());
 
-		hValues = new ArrayList<Integer>(dag.size());
-		for (int i = 0; i < dag.size(); i++) {
+		hValues = new ArrayList<Integer>(this.dag.size());
+		for (int i = 0; i < this.dag.size(); i++) {
 			hValues.add(0);
 		}
 
-		for (Node n : dag) {
+		for (Node n : this.dag) {
 			if (n.getChildren().isEmpty()) {
 				calculateH(n, 0);
 			}
 		}
+		
 		for(int i=0; i< hValues.size();i++){
 			System.out.println("heuristic of "+dag.get(i).getName() +" is " + hValues.get(i));
 		}
@@ -82,6 +94,11 @@ public class IDAStar implements Scheduler {
 	}
 
 	@Override
+	public void run() {
+		schedule();
+	}
+
+	@Override
 	public void schedule() {
 		for (int i = 0; i < nextAvailableNodes.size(); i++) {
 			if (nextAvailableNodes.get(i)) {
@@ -94,12 +111,18 @@ public class IDAStar implements Scheduler {
 					s.clear();
 				}
 
-				boolean isSolved = false;
 				while (!isSolved) {
 					System.out.println("fCutOff = " + fCutOff);
-					isSolved = buildTree(dag.get(i), 1);
-					fCutOff = nextCutOff;
-					nextCutOff = -1;
+					buildTree(dag.get(i), 1);
+					while (true){
+						try {
+							fCutOff = fCutOffQueue.take();
+							if (!finishedFCutOffList.contains(fCutOff)) break;
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					finishedFCutOffList.add(fCutOff);
 				}
 			}
 		}
@@ -117,6 +140,9 @@ public class IDAStar implements Scheduler {
 	 * @return true if a schedule has been made
 	 */
 	private boolean buildTree(Node node, int pNo) {
+		if (isSolved && fCutOff > stopCutOff)
+			return true;
+
 		int nodeStartTime = getStartTime(node, pNo);
 
 		int g = nodeStartTime /* + node.getWeight() */;
@@ -126,14 +152,16 @@ public class IDAStar implements Scheduler {
 		// if greater than cut off, we only store the next cut off, no need to
 		// actually traverse it
 		if (f > fCutOff) {
-			if (f < nextCutOff || nextCutOff == -1) {
-				nextCutOff = f;
+			if (!fCutOffQueue.contains(f)){
+			// add f cut off values to a priority queue
+				fCutOffQueue.put(f);
 			}
 			return false;
+
 		} else {
 
 			// If we need to visualize update the visuals
-			if (isVisual && node.getName()!=null) {
+			if (isVisual && node.getName() != null) {
 				node.incFrequency();
 				if(refresh_value >= refresh_rate){
 					visualDag.update(node);
@@ -165,13 +193,6 @@ public class IDAStar implements Scheduler {
 
 			boolean isAvailable = checkAnyAvailable();
 
-			// If we need to visualize update the visuals
-			/*if(isVisual&&node.getName()==" "){
-				node.incFrequency();
-				//System.out.println("The added node is "+node.getName()+" and the frequency is "+node.getFrequency());
-				visualDag.update(node);
-			}*/
-
 			// if the current node is a leaf (i.e. an ending task) AND there are
 			// no more tasks
 			if (node.getChildren().isEmpty() && !isAvailable) {
@@ -188,13 +209,14 @@ public class IDAStar implements Scheduler {
 					}
 				}
 
-
 				// only copy if current solution has better finish time
 				if (bestFinishTime > currentFinishTime || bestFinishTime == -1) {
 					bestFinishTime = currentFinishTime;
-					copySolution();
+					visualCopy(bestSchedule, dag);
 				}
-				return true;
+
+				isSolved = true;
+				return isSolved;
 			} else {
 				// begin recursion
 				boolean isSuccessful = false;
@@ -317,15 +339,33 @@ public class IDAStar implements Scheduler {
 		return isAvailable;
 	}
 
-	private void copySolution() {
-		bestSchedule.clear();
-		for (int i = 0; i < dag.size(); i++) {
-			bestSchedule.add(i, new Node(dag.get(i)));
+	private void copyData(ArrayList<Node> target, ArrayList<Node> source) {
+		target.clear();
+		for (int i = 0; i < source.size(); i++) {
+			target.add(i, new Node(source.get(i)));
+		}
+		
+		for (int i = 0; i < source.size(); i++) {
+			for (Node parent: source.get(i).getParents().keySet()){
+				target.get(i).setParents(target.get(parent.getIndex()), source.get(i).getParents().get(parent));
+			}
 			
-			if (isVisual){
-				visualDag.updateProcGraph(dag.get(i));
+			for (Node child: source.get(i).getChildren()){
+				target.get(i).setChildren(target.get(child.getIndex()));
 			}
 		}
+	}
+	
+	private void visualCopy(ArrayList<Node> target, ArrayList<Node> source) {
+		target.clear();
+		for (int i = 0; i < source.size(); i++) {
+			target.add(i, new Node(source.get(i)));
+
+			if (isVisual) {
+				visualDag.updateProcGraph(source.get(i));
+			}
+		}
+		
 	}
 
 	@Override
@@ -346,4 +386,5 @@ public class IDAStar implements Scheduler {
 		this.isVisual = true;
 		this.visualDag = visualDag;
 	}
+
 }
