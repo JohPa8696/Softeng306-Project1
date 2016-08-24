@@ -121,4 +121,10 @@ public class SimpleScheduler implements Scheduler {
 		
 	}
 
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

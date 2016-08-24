@@ -57,7 +57,7 @@ public class IDAStarTest {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, 1);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
@@ -103,7 +103,7 @@ public class IDAStarTest {
 		
 		int numProc = 2;
 		
-		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc, 1);
+		IDAStar awesome = new IDAStar(dag, nextAvailableNodes, numProc);
 		System.out.println("running0");
 		awesome.schedule();
 		System.out.println("running1");
