@@ -7,11 +7,25 @@ import java.util.Collections;
 
 import org.junit.Test;
 
+import input_processor.InputProcessor;
 import node.Node;
 import schedulers.IDAStar;
+import utils.InvalidArgumentException;
 
 public class IDAStarTest {
-
+	
+	// Stores the input processors
+	private ArrayList<InputProcessor> inputProcessors= new ArrayList<InputProcessor>();
+	void setup() throws InvalidArgumentException{
+		inputProcessors.add(new InputProcessor(new String[]{"resources/disjoint_graph.dot","3"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/input.dot","2"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/Nodes_10_Random.dot","4"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/Nodes_11_OutTree.dot","6"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/Nodes_7_OutTree.dot","3"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/Nodes_8_Random.dot","5"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/Nodes_9_SeriesParallel.dot","6"}));
+		inputProcessors.add(new InputProcessor(new String[]{"resources/5_branches","4"}));
+	}
 	@Test
 	public void testSimple() {
 		
@@ -115,7 +129,7 @@ public class IDAStarTest {
 
 	@Test
 	public void testDisjointGraphs(){
-	
+		
 	}
 
 }

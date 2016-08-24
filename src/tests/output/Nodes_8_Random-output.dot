@@ -1,4 +1,4 @@
-digraph "outputRandom_Nodes_8_Density_2.0_CCR_0.1_WeightType_Random" {
+digraph "outputRandom_Nodes_8_Density_2.0_CCR_0.1_WeightType_Random5p" {
 	0	 [Weight=35,Start=0,Processor=1];
 	1	 [Weight=88,Start=38,Processor=2];
 	0 -> 1	 [Weight=3];
