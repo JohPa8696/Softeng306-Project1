@@ -112,8 +112,8 @@ public class Dag {
 		if (prevNode == null){
 			prevNode = n;
 		}else if(!n.getName().equals(prevNode.getName())){
-			int freq = n.getFrequency();
-			double color = (freq/200000.0);
+			int freq = prevNode.getFrequency();
+			double color = (freq/2000000.0);
 			if (color > 0.5){
 				color = 0.5;
 			}
