@@ -190,12 +190,10 @@ public class Dag implements ViewerListener{
 			proc_graph.getEdge(fromName+name).addAttribute("layout.weight", 4);
 		}
 		procList.set(proc-1, n);
-		
-		
 	}
+	
 	@Override
 	public void buttonPushed(String id) {
-		// TODO Auto-generated method stub
 		try{
 			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
 				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Time"));
@@ -205,31 +203,22 @@ public class Dag implements ViewerListener{
 				proc_graph.getNode(id).addAttribute("ui.label", (Object)proc_graph.getNode(id).getAttribute("Name"));
 				proc_graph.getNode(id).addAttribute("Clicked",true);
 			}
-		}catch(NullPointerException e){}
-		
-		
+		}catch(NullPointerException e){}		
 	}
+	
 	@Override
 	public void buttonReleased(String id) {
-		// TODO Auto-generated method stub
-		
-	
-
 	}
+	
 	@Override
 	public void viewClosed(String arg0) {
-		// TODO Auto-generated method stub
 		looped = false;
 	}
 	
 	public void mouseLeft(String arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 	
-	public void mouseOver(String arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseOver(String arg0) {		
 	}
 	
 }
