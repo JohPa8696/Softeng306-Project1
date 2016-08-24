@@ -100,13 +100,13 @@ public class Dag {
 		if (prevNode == null){
 			prevNode = n;
 		}else{
-			g.getNode(prevNode.getName()).setAttribute("ui.style", "fill-color: white,black;");
+			g.getNode(prevNode.getName()).removeAttribute("ui.class");
 			prevNode = n;
 		}
 		int freq = n.getFrequency();
 		double color = freq/100000.0;
 		g.getNode(n.getName()).setAttribute("ui.color", color);
-		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: yellow,red;");
+		//g.getNode(n.getName()).addAttribute("ui.class", "active");
 		
 	}
 	public void updateProcGraph(Node n){
