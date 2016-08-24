@@ -16,7 +16,7 @@ import dag.Dag;
 import org.graphstream.ui.swingViewer.*;
 import org.graphstream.ui.view.*;
 import org.graphstream.graph.*;
-
+import org.graphstream.ui.*;
 import javax.swing.*;
 import java.awt.*;
 /**

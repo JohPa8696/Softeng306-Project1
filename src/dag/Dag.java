@@ -118,7 +118,7 @@ public class Dag implements ViewerListener{
 		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
 		//graphnode.setAttribute("ui.color", color);
 		//graphnode.addAttribute("ui.class", "final");
-		graphnode.addAttribute("ui.label", node.getName()+"-"+"Processor: "+node.getProcessor());
+		graphnode.addAttribute("ui.label", node.getName()+""+" P"+node.getProcessor());
 		
 	}
 	/**
@@ -210,6 +210,16 @@ public class Dag implements ViewerListener{
 	public void viewClosed(String arg0) {
 		// TODO Auto-generated method stub
 		looped = false;
+	}
+	@Override
+	public void mouseLeft(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseOver(String arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
