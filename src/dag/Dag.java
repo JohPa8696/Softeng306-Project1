@@ -1,23 +1,17 @@
 package dag;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import node.Node;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
-import org.graphstream.ui.view.util.MouseManager;
+
 
 
 /**
@@ -51,7 +45,7 @@ public class Dag implements ViewerListener{
 		
 	}
 	/**
-	 * Create a visualized DAG graph
+	 * Create a visualized DAG graph and processor graph.
 	 */
 	public void createDag(){
 		System.setProperty("gs.ui.renderer",
@@ -98,6 +92,10 @@ public class Dag implements ViewerListener{
 		proc_graph.setStrict(false);
 		proc_graph.setAutoCreate(true);
 	}
+	/**
+	 * Create a processor graph which shows the order and the allocation of the node. User could 
+	 * click on a node to see the starting time.
+	 */
 	public void createProcessorGraph(){
 		
 		viewer = proc_graph.display();
@@ -147,6 +145,10 @@ public class Dag implements ViewerListener{
 		
 	}
 	
+	/**
+	 * @param n - Passing the node which is determined
+	 * Update the processor graph and store the information inside the node.
+	 */
 	public void updateProcGraph(Node n){
 		int proc = n.getProcessor();
 		String name = n.getName();
@@ -157,7 +159,7 @@ public class Dag implements ViewerListener{
 		//System.out.println(n.getName());
 		proc_graph.getNode(name).addAttribute("ui.label", name);
 		proc_graph.getNode(name).setAttribute("Name", n.getName());
-		proc_graph.getNode(name).setAttribute("Start", n.getStartTime());
+		proc_graph.getNode(name).setAttribute("Time", n.getStartTime()+"-"+n.getFinishTime());
 		proc_graph.getNode(name).setAttribute("Clicked", true);
 		
 		//System.out.println(proc_graph.getNode(n.getName()).getId());
@@ -176,24 +178,14 @@ public class Dag implements ViewerListener{
 		}
 		procList.set(proc-1, n);
 		
-		/*try{
-			proc_graph.addNode(n.getName());
-			proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
-		}catch(IdAlreadyInUseException e){
-			//proc_graph.removeEdge("P"+n.getProcessor()+n.getName());
-			//proc_graph.addEdge("P"+n.getProcessor()+n.getName(), "P"+n.getProcessor(), n.getName(),true);
-			Iterable<Edge> edges = proc_graph.getNode(n.getName()).getEachEdge();
-			for (Edge edge : edges){
-				proc_graph.removeEdge(edge);
-			}
-		}*/
+		
 	}
 	@Override
 	public void buttonPushed(String id) {
 		// TODO Auto-generated method stub
 		try{
 			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")){
-				proc_graph.getNode(id).addAttribute("ui.label", "Start Time: "+proc_graph.getNode(id).getAttribute("Start"));
+				proc_graph.getNode(id).addAttribute("ui.label", proc_graph.getNode(id).getAttribute("Time"));
 				proc_graph.getNode(id).addAttribute("Clicked",false);
 				
 			}else{
