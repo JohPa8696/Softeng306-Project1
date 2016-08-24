@@ -24,7 +24,7 @@ public class Main {
 			UnsupportedEncodingException, InvalidArgumentException {
 
 		long StartTime = System.currentTimeMillis();
-
+		Dag dag = null;
 		ArrayList<Node> list = new ArrayList<Node>();
 		ArrayList<Boolean> available;
 		int numProc;
@@ -47,8 +47,9 @@ public class Main {
 			
 			// visuals are displayed if set to true
 			if (ip.getVisualisation()) {
-				Dag dag = new Dag(list, numProc);
+				dag = new Dag(list, numProc);
 				dag.createDag();
+				
 				s.setVisual(dag);
 			}
 			
@@ -78,6 +79,9 @@ public class Main {
 			}
 		}
 
+		if (ip.getVisualisation()){
+			dag.createProcessorGraph();
+		}
 		// Create output file
 		if (ip.getOutputFileName() != null) {
 			OutputProcessor op = new OutputProcessor(ip.getFileName(),

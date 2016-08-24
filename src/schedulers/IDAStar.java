@@ -360,7 +360,6 @@ public class IDAStar implements Scheduler {
 		target.clear();
 		for (int i = 0; i < source.size(); i++) {
 			target.add(i, new Node(source.get(i)));
-
 			if (isVisual) {
 				visualDag.updateProcGraph(source.get(i));
 			}
