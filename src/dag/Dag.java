@@ -56,7 +56,7 @@ public class Dag implements ViewerListener {
 	public Graph createDag() {
 		System.setProperty("gs.ui.renderer",
 				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		g.addAttribute("ui.stylesheet", "url('resources/style.css')");
+		g.addAttribute("ui.stylesheet", "url('style.css')");
 
 		for (Node node : nodelist) {
 			// System.out.println("The node name is "+node.getName());
@@ -90,7 +90,7 @@ public class Dag implements ViewerListener {
 			node.addAttribute("ui.label", node.getId());
 		}
 
-		proc_graph.addAttribute("ui.stylesheet", "url('resources/style.css')");
+		proc_graph.addAttribute("ui.stylesheet", "url('style.css')");
 		proc_graph.addAttribute("ui.class", "ProcessorGraph");
 		for (int i = 1; i <= numProc; i++) {
 			String proc = "P" + i;
