@@ -30,4 +30,4 @@ Kelvin Lau      9682466   klau158   klevinlaughs
 Xiaohui Lin     8586122   xlin504   xlin504
 Vincent Nio     6563584   vnio666   vNeon
 Johnny Pham     8563174   dpha010   JohPa8696
-Jack Wong
+Jack Wong       5863577   lwon229   Jack-Wong94
