@@ -75,10 +75,6 @@ public class IDAStar implements Scheduler {
 		}
 
 		getTotalComputationTime();
-		
-		for(int i=0; i< hValues.size();i++){
-			System.out.println("heuristic of "+dag.get(i).getName() +" is " + hValues.get(i));
-		}
 	}
 	
 	private void getTotalComputationTime(){
@@ -121,7 +117,6 @@ public class IDAStar implements Scheduler {
 				}
 
 				while (!isSolved) {
-					System.out.println("fCutOff = " + fCutOff);
 					if(isVisual){
 						if(root == null){
 							visualDag.setRoot(dag.get(i));
@@ -206,8 +201,6 @@ public class IDAStar implements Scheduler {
 				}else if(isVisual){
 					refresh_value++;
 				}
-				//System.out.println("The added node is " + node.getName()
-						//+ " and the frequency is " + node.getFrequency()+" and the processor is "+node.getProcessor());
 			}
 
 			node.setStartTime(nodeStartTime);
