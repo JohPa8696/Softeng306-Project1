@@ -1,9 +1,5 @@
-           ____   ____  _    _ _______ 
-     /\   |  _ \ / __ \| |  | |__   __|
-    /  \  | |_) | |  | | |  | |  | |   
-   / /\ \ |  _ <| |  | | |  | |  | |   
-  / ____ \| |_) | |__| | |__| |  | |   
- /_/    \_|____/ \____/ \____/   |_|   
+About
+-------------
 This project solves an NP hard task scheduling problem using an Iterative Deepening A* (IDA*) algorithm. 
 Pseudocode can be found on the Github Wiki (https://github.com/JohPa8696/Softeng306-Project1/wiki/IDA*).
 

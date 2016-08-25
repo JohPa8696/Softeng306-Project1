@@ -11,6 +11,10 @@ import schedulers.Scheduler;
 import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 32d828f843ad3ddf022dcfb8d4ffb72eb089f0c9
 import org.graphstream.ui.view.*;
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +30,6 @@ public class Main {
 			throws FileNotFoundException, UnsupportedEncodingException, InvalidArgumentException {
 
 		ArrayList<JFrame> frames = new ArrayList<>();
-		long StartTime = System.currentTimeMillis();
 		Dag dag = null;
 		ArrayList<Node> list = new ArrayList<Node>();
 		ArrayList<Boolean> available;
@@ -103,6 +106,7 @@ public class Main {
 		}
 		// Get finish time of the program
 		long EndTime = System.currentTimeMillis();
+
 
 		// Create output file
 		if (ip.getOutputFileName() != null) {
