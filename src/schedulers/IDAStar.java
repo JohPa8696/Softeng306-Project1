@@ -9,9 +9,9 @@ import java.util.concurrent.PriorityBlockingQueue;
 import dag.Dag;
 import node.Node;
 
-
 /**
  * Main implementation of Iterative Deepening A* algorithm
+ * 
  * @author Amy and Kelvin
  *
  */
@@ -80,7 +80,6 @@ public class IDAStar implements Scheduler {
 		}
 
 		getTotalComputationTime();
-
 	}
 
 	private void getTotalComputationTime() {
@@ -123,7 +122,6 @@ public class IDAStar implements Scheduler {
 				}
 
 				while (!isSolved) {
-					System.out.println("fCutOff = " + fCutOff);
 					if (isVisual) {
 						if (root == null) {
 							visualDag.setRoot(dag.get(i));
@@ -209,10 +207,8 @@ public class IDAStar implements Scheduler {
 					refresh_value = 0;
 				} else if (isVisual) {
 					refresh_value++;
+
 				}
-				// System.out.println("The added node is " + node.getName()
-				// + " and the frequency is " + node.getFrequency()+" and the
-				// processor is "+node.getProcessor());
 			}
 
 			node.setStartTime(nodeStartTime);
@@ -310,6 +306,7 @@ public class IDAStar implements Scheduler {
 				return isSuccessful;
 			}
 		}
+
 	}
 
 	/**

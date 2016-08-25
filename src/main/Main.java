@@ -103,7 +103,6 @@ public class Main {
 		}
 		// Get finish time of the program
 		long EndTime = System.currentTimeMillis();
-		System.out.print(EndTime - StartTime);
 
 		// Create output file
 		if (ip.getOutputFileName() != null) {
