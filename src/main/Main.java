@@ -11,10 +11,6 @@ import schedulers.Scheduler;
 import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
-<<<<<<< HEAD
-=======
-
->>>>>>> 32d828f843ad3ddf022dcfb8d4ffb72eb089f0c9
 import org.graphstream.ui.view.*;
 import javax.swing.*;
 import java.awt.*;
