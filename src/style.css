@@ -1,0 +1,35 @@
+node {
+	fill-mode: dyn-plain;
+	size: 50px;
+	text-size: 15px;
+	fill-color: white, salmon, yellow;
+	text-alignment: center;
+	text-color: black;
+	stroke-mode: plain;
+	stroke-color: blue;
+}
+
+node.Processor {
+	shape: diamond;
+	fill-color: yellow;
+	size: 80px;
+	text-alignment: center;
+	stroke-mode: plain;
+	stroke-color: blue;
+}
+
+edge {
+	
+}
+
+graph {
+	fill-color: #F1DDCF;
+}
+
+graph.ProcessorGraph {
+	visibility-mode: hidden;
+}
+
+node:clicked {
+	fill-color: red;
+}
