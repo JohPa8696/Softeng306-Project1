@@ -174,6 +174,29 @@ public class Dag implements ViewerListener {
 				"fill-color: white,black,yellow;");
 		g.getNode(n.getName()).setAttribute("ui.color", 0);
 	}
+	
+	public void clearProcGraph(){
+		
+		for (int i = 0; i < numProc; i++){
+			procList.set(i, null);
+		}
+		
+		proc_graph.clear();
+		
+		proc_graph.addAttribute("ui.stylesheet", "url('style.css')");
+		proc_graph.addAttribute("ui.class", "ProcessorGraph");
+		for (int i = 1; i <= numProc; i++) {
+			String proc = "P" + i;
+			proc_graph.addNode(proc);
+			proc_graph.getNode(proc).addAttribute("ui.class", "Processor");
+			proc_graph.getNode(proc).setAttribute("xyz", 1, 3, 0);
+		}
+		for (org.graphstream.graph.Node node : proc_graph) {
+			node.addAttribute("ui.label", node.getId());
+		}
+		proc_graph.setStrict(false);
+		proc_graph.setAutoCreate(true);
+	}
 
 	/**
 	 * @param n

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import dag.Dag;
@@ -28,6 +30,7 @@ public class IDAStar implements Scheduler {
 
 	public static volatile boolean isSolved = false;
 	private static volatile int stopCutOff = -1;
+	private static CyclicBarrier barrier;
 
 	private int numProc;
 	private int fCutOff = 0;
@@ -168,6 +171,20 @@ public class IDAStar implements Scheduler {
 					}
 					finishedFCutOffList.add(fCutOff);
 				}
+				
+				try {
+					barrier.await();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BrokenBarrierException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				fCutOffQueue.clear();
+				finishedFCutOffList.clear();
+				isSolved = false;
 
 			}
 		}
@@ -280,7 +297,7 @@ public class IDAStar implements Scheduler {
 				// of multiple entry points)
 				if (bestFinishTime > currentFinishTime || bestFinishTime == -1) {
 					bestFinishTime = currentFinishTime;
-					visualCopy(bestSchedule, dag);
+					visualCopy();
 				}
 
 				// set is solved immediately so all threads know a solution is
@@ -459,15 +476,21 @@ public class IDAStar implements Scheduler {
 	 * @param target
 	 * @param source
 	 */
-	private void visualCopy(ArrayList<Node> target, ArrayList<Node> source) {
-		target.clear();
-		for (int i = 0; i < source.size(); i++) {
-			target.add(i, new Node(source.get(i)));
-			if (isVisual) {
-				visualDag.updateProcGraph(source.get(i));
+	private void visualCopy() {
+		bestSchedule.clear();
+		for (int i = 0; i < dag.size(); i++) {
+			bestSchedule.add(i, new Node(dag.get(i)));
+		}
+		
+		if (isVisual) {
+			visualDag.clearProcGraph();
+		
+			for (int i = 0; i < numProc; i++) {
+				for (Node n: procFinishTimes.get(i)){
+					visualDag.updateProcGraph(n);
+				}
 			}
 		}
-
 	}
 
 	@Override
@@ -491,6 +514,14 @@ public class IDAStar implements Scheduler {
 
 	public Dag getDag() {
 		return visualDag;
+	}
+
+	public static CyclicBarrier getBarrier() {
+		return barrier;
+	}
+
+	public static void setBarrier(CyclicBarrier barrier) {
+		IDAStar.barrier = barrier;
 	}
 
 }

@@ -5,6 +5,8 @@ import node.Node;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.concurrent.CyclicBarrier;
+
 import output_processor.OutputProcessor;
 import schedulers.IDAStar;
 import schedulers.Scheduler;
@@ -57,7 +59,12 @@ public class Main {
 		int numThreads = ip.getNumThread();
 		ArrayList<Thread> threadList = new ArrayList<Thread>(numThreads);
 		ArrayList<Scheduler> schedulerList = new ArrayList<Scheduler>(numThreads);
-
+		
+		CyclicBarrier barrier = new CyclicBarrier(numThreads);
+		IDAStar.setBarrier(barrier);
+		
+		float start = System.currentTimeMillis();
+		
 		// Creates Schedule for num threads and start them
 		for (int i = 0; i < numThreads; i++) {
 			Scheduler s = new IDAStar(list, available, numProc);
@@ -100,10 +107,10 @@ public class Main {
 				}
 			}
 		}
-		// Get finish time of the program
-		long EndTime = System.currentTimeMillis();
-
-
+		
+		float end = System.currentTimeMillis();
+		System.out.println(end - start);
+		
 		// Create output file
 		if (ip.getOutputFileName() != null) {
 			OutputProcessor op = new OutputProcessor(ip.getFileName(), bestSchedule.getSchedule(), ip.getOutputFileName());

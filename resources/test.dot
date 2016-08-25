@@ -1,0 +1,8 @@
+digraph "test" {
+	d	 [Weight=5];
+	b	 [Weight=6];
+	c	 [Weight=7];
+	b -> c	 [Weight=3];
+	a -> c	 [Weight=3];
+	a	 [Weight=5];
+}
