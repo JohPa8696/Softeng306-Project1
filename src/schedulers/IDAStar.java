@@ -43,12 +43,20 @@ public class IDAStar implements Scheduler {
 
 	private Node root = null;
 
-	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
+	/**
+	 * Constructor creates a deep copy of ArrayList<Node> dag and ArrayList<Boolean> nextAvailableNodes
+	 * @param dag - the tasks to be scheduled
+	 * @param nextAvailableNodes - a true/false mask for whether a node is available to be expanded
+	 * @param numProc - the number of processors
+	 */
+	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
+			int numProc) {
 
 		this.dag = new ArrayList<Node>(dag.size());
 		copyData(this.dag, dag);
 
-		this.nextAvailableNodes = new ArrayList<Boolean>(nextAvailableNodes.size());
+		this.nextAvailableNodes = new ArrayList<Boolean>(
+				nextAvailableNodes.size());
 		for (int i = 0; i < nextAvailableNodes.size(); i++) {
 			this.nextAvailableNodes.add(nextAvailableNodes.get(i) || false);
 		}
@@ -68,11 +76,13 @@ public class IDAStar implements Scheduler {
 
 		bestSchedule = new ArrayList<>(this.dag.size());
 
+		// initialise bottom level hValues
 		hValues = new ArrayList<Integer>(this.dag.size());
 		for (int i = 0; i < this.dag.size(); i++) {
 			hValues.add(0);
 		}
 
+		// calculate bottom level hValues for every node
 		for (Node n : this.dag) {
 			if (n.getChildren().isEmpty()) {
 				calculateH(n, 0);
@@ -88,6 +98,11 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
+	/**
+	 * Calculates the heuristic for node n in bottom level cost function
+	 * @param n - the current node
+	 * @param childH - heuristic of child
+	 */
 	private void calculateH(Node n, int childH) {
 		int hTemp = n.getWeight() + childH;
 
@@ -108,19 +123,25 @@ public class IDAStar implements Scheduler {
 		schedule();
 	}
 
+	/**
+	 * Called by computation thread when it is started. It will schedule the
+	 * input tasks using buildTree.
+	 */
 	@Override
 	public void schedule() {
 		for (int i = 0; i < nextAvailableNodes.size(); i++) {
 			if (nextAvailableNodes.get(i)) {
 
 				// get initial f cut off for starting node
-				fCutOff = Math.max(getHValue(dag.get(i)), (totalComputationTime / numProc));
+				fCutOff = Math.max(getHValue(dag.get(i)),
+						(totalComputationTime / numProc));
 
 				// reset procFinishTimes
 				for (Stack<Node> s : procFinishTimes) {
 					s.clear();
 				}
-
+				
+				// isSolved is checked by all threads
 				while (!isSolved) {
 					if (isVisual) {
 						if (root == null) {
@@ -132,8 +153,10 @@ public class IDAStar implements Scheduler {
 							root = dag.get(i);
 						}
 					}
-
+					
 					buildTree(dag.get(i), 1);
+					
+					// a thread should only try to get a new fValue if it isn't solved
 					while (!isSolved) {
 						try {
 							fCutOff = fCutOffQueue.take();
@@ -162,6 +185,11 @@ public class IDAStar implements Scheduler {
 	 * @return true if a schedule has been made
 	 */
 	private boolean buildTree(Node node, int pNo) {
+		// each thread should be constantly check if a solution has been found
+		// by any thread
+		// if solved and fcutoff is greater, it wont have optimal solution, but
+		// if fcutoff is less then it should be allowed to continue and find a
+		// solution for its own fcutoff (if it exists)
 		if (isSolved && fCutOff > stopCutOff)
 			return true;
 
@@ -177,7 +205,8 @@ public class IDAStar implements Scheduler {
 		if (procFinishTimes.get(pNo - 1).isEmpty()) {
 			currentIdleTime = nodeStartTime;
 		} else {
-			currentIdleTime = nodeStartTime - procFinishTimes.get(pNo - 1).peek().getFinishTime();
+			currentIdleTime = nodeStartTime
+					- procFinishTimes.get(pNo - 1).peek().getFinishTime();
 		}
 		idleTime += currentIdleTime;
 		int fIdle = (totalComputationTime + idleTime) / numProc;
@@ -311,8 +340,9 @@ public class IDAStar implements Scheduler {
 
 	/**
 	 * Calculates the earliest start time for a given node and process number
-	 * The earliest start time will be the latest of two possible times: - time
-	 * based on parent tasks - time based on the current processor task
+	 * The earliest start time will be the latest of two possible times: 
+	 * - time based on parent tasks 
+	 * - time based on the current processor task
 	 * 
 	 * @param node
 	 *            - the node/task
@@ -341,13 +371,15 @@ public class IDAStar implements Scheduler {
 
 		int procFinishTime;
 		if (!procFinishTimes.get(pNo - 1).isEmpty()) {
-			procFinishTime = procFinishTimes.get(pNo - 1).peek().getFinishTime();
+			procFinishTime = procFinishTimes.get(pNo - 1).peek()
+					.getFinishTime();
 		} else {
 			procFinishTime = 0;
 		}
 
 		// return the latest of the two times
-		return procFinishTime > parentFinishTime ? procFinishTime : parentFinishTime;
+		return procFinishTime > parentFinishTime ? procFinishTime
+				: parentFinishTime;
 
 	}
 
@@ -396,6 +428,13 @@ public class IDAStar implements Scheduler {
 		return isAvailable;
 	}
 
+	/**
+	 * Creates a copy of ArrayList<Node> from target to source, using correct
+	 * object references
+	 * 
+	 * @param target
+	 * @param source
+	 */
 	private void copyData(ArrayList<Node> target, ArrayList<Node> source) {
 		target.clear();
 		for (int i = 0; i < source.size(); i++) {
@@ -404,7 +443,8 @@ public class IDAStar implements Scheduler {
 
 		for (int i = 0; i < source.size(); i++) {
 			for (Node parent : source.get(i).getParents().keySet()) {
-				target.get(i).setParents(target.get(parent.getIndex()), source.get(i).getParents().get(parent));
+				target.get(i).setParents(target.get(parent.getIndex()),
+						source.get(i).getParents().get(parent));
 			}
 
 			for (Node child : source.get(i).getChildren()) {
@@ -413,6 +453,12 @@ public class IDAStar implements Scheduler {
 		}
 	}
 
+	/**
+	 * Creates a copy of ArrayList<Node> ignoring references to other nodes
+	 * 
+	 * @param target
+	 * @param source
+	 */
 	private void visualCopy(ArrayList<Node> target, ArrayList<Node> source) {
 		target.clear();
 		for (int i = 0; i < source.size(); i++) {
