@@ -9,6 +9,12 @@ import java.util.concurrent.PriorityBlockingQueue;
 import dag.Dag;
 import node.Node;
 
+
+/**
+ * Main implementation of Iterative Deepening A* algorithm
+ * @author Amy and Kelvin
+ *
+ */
 public class IDAStar implements Scheduler {
 
 	private ArrayList<Node> dag;
@@ -19,35 +25,34 @@ public class IDAStar implements Scheduler {
 
 	private static volatile PriorityBlockingQueue<Integer> fCutOffQueue = new PriorityBlockingQueue<Integer>();
 	private static volatile ArrayList<Integer> finishedFCutOffList = new ArrayList<Integer>();
-	
+
 	public static volatile boolean isSolved = false;
 	private static volatile int stopCutOff = -1;
-	
+
 	private int numProc;
 	private int fCutOff = 0;
 	private ArrayList<Node> bestSchedule;
 	private int bestFinishTime = -1;
-	private int totalComputationTime =0;
+	private int totalComputationTime = 0;
 	private int idleTime = 0;
 
 	private boolean isVisual = false;
 	private Dag visualDag;
 	private int refresh_rate = 25000;
-	private int refresh_value=0;
+	private int refresh_value = 0;
 
 	private Node root = null;
-	
-	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes,
-			int numProc) {
-		
+
+	public IDAStar(ArrayList<Node> dag, ArrayList<Boolean> nextAvailableNodes, int numProc) {
+
 		this.dag = new ArrayList<Node>(dag.size());
 		copyData(this.dag, dag);
-		
+
 		this.nextAvailableNodes = new ArrayList<Boolean>(nextAvailableNodes.size());
-		for (int i = 0; i < nextAvailableNodes.size(); i++){
+		for (int i = 0; i < nextAvailableNodes.size(); i++) {
 			this.nextAvailableNodes.add(nextAvailableNodes.get(i) || false);
 		}
-		
+
 		this.numProc = numProc;
 
 		scheduledNodes = new ArrayList<Boolean>(this.dag.size());
@@ -75,18 +80,15 @@ public class IDAStar implements Scheduler {
 		}
 
 		getTotalComputationTime();
-		
-		for(int i=0; i< hValues.size();i++){
-			System.out.println("heuristic of "+dag.get(i).getName() +" is " + hValues.get(i));
-		}
+
 	}
-	
-	private void getTotalComputationTime(){
-		for (int i=0; i<dag.size(); i++){
+
+	private void getTotalComputationTime() {
+		for (int i = 0; i < dag.size(); i++) {
 			totalComputationTime += dag.get(i).getWeight();
 		}
 	}
-	
+
 	private void calculateH(Node n, int childH) {
 		int hTemp = n.getWeight() + childH;
 
@@ -113,7 +115,7 @@ public class IDAStar implements Scheduler {
 			if (nextAvailableNodes.get(i)) {
 
 				// get initial f cut off for starting node
-				fCutOff = Math.max(getHValue(dag.get(i)), (totalComputationTime/numProc));
+				fCutOff = Math.max(getHValue(dag.get(i)), (totalComputationTime / numProc));
 
 				// reset procFinishTimes
 				for (Stack<Node> s : procFinishTimes) {
@@ -122,11 +124,11 @@ public class IDAStar implements Scheduler {
 
 				while (!isSolved) {
 					System.out.println("fCutOff = " + fCutOff);
-					if(isVisual){
-						if(root == null){
+					if (isVisual) {
+						if (root == null) {
 							visualDag.setRoot(dag.get(i));
 							root = dag.get(i);
-						}else if (!dag.get(i).getName().equals(root.getName())){
+						} else if (!dag.get(i).getName().equals(root.getName())) {
 							visualDag.unRoot(root);
 							visualDag.setRoot(dag.get(i));
 							root = dag.get(i);
@@ -134,17 +136,18 @@ public class IDAStar implements Scheduler {
 					}
 
 					buildTree(dag.get(i), 1);
-					while (!isSolved){
+					while (!isSolved) {
 						try {
 							fCutOff = fCutOffQueue.take();
-							if (!finishedFCutOffList.contains(fCutOff)) break;
+							if (!finishedFCutOffList.contains(fCutOff))
+								break;
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}
 					finishedFCutOffList.add(fCutOff);
 				}
-				
+
 			}
 		}
 	}
@@ -166,32 +169,33 @@ public class IDAStar implements Scheduler {
 
 		int nodeStartTime = getStartTime(node, pNo);
 		int currentIdleTime = 0;
-				
+
 		int g = nodeStartTime;
 		int h = getHValue(node);
 		int fBottomLevel = g + h;
-		
-		//current idle time is just for this iteration
-		
-		if (procFinishTimes.get(pNo - 1).isEmpty()){
+
+		// current idle time is just for this iteration
+
+		if (procFinishTimes.get(pNo - 1).isEmpty()) {
 			currentIdleTime = nodeStartTime;
 		} else {
 			currentIdleTime = nodeStartTime - procFinishTimes.get(pNo - 1).peek().getFinishTime();
 		}
 		idleTime += currentIdleTime;
-		int fIdle = (totalComputationTime + idleTime)/numProc;
+		int fIdle = (totalComputationTime + idleTime) / numProc;
 
-		//use the max of either bottom level f or idle time f as our cost function
+		// use the max of either bottom level f or idle time f as our cost
+		// function
 		int f = Math.max(fBottomLevel, fIdle);
-		
+
 		// if greater than cut off, we only store the next cut off, no need to
 		// actually traverse it
 		if (f > fCutOff) {
-			if (!fCutOffQueue.contains(f)){
-			// add f cut off values to a priority queue
+			if (!fCutOffQueue.contains(f)) {
+				// add f cut off values to a priority queue
 				fCutOffQueue.put(f);
 			}
-			//subtract currentIdleTime from totalIdleTime
+			// subtract currentIdleTime from totalIdleTime
 			idleTime -= currentIdleTime;
 			return false;
 
@@ -200,14 +204,15 @@ public class IDAStar implements Scheduler {
 			// If we need to visualize update the visuals
 			if (isVisual && node.getName() != null) {
 				node.incFrequency();
-				if(refresh_value >= refresh_rate){
+				if (refresh_value >= refresh_rate) {
 					visualDag.update(node);
-					refresh_value=0;
-				}else if(isVisual){
+					refresh_value = 0;
+				} else if (isVisual) {
 					refresh_value++;
 				}
-				//System.out.println("The added node is " + node.getName()
-						//+ " and the frequency is " + node.getFrequency()+" and the processor is "+node.getProcessor());
+				// System.out.println("The added node is " + node.getName()
+				// + " and the frequency is " + node.getFrequency()+" and the
+				// processor is "+node.getProcessor());
 			}
 
 			node.setStartTime(nodeStartTime);
@@ -246,13 +251,15 @@ public class IDAStar implements Scheduler {
 					}
 				}
 
-				// only copy if current solution has better finish time (in case of multiple entry points)
+				// only copy if current solution has better finish time (in case
+				// of multiple entry points)
 				if (bestFinishTime > currentFinishTime || bestFinishTime == -1) {
 					bestFinishTime = currentFinishTime;
 					visualCopy(bestSchedule, dag);
 				}
 
-				// set is solved immediately so all threads know a solution is found
+				// set is solved immediately so all threads know a solution is
+				// found
 				isSolved = true;
 				return isSolved;
 			} else {
@@ -260,21 +267,23 @@ public class IDAStar implements Scheduler {
 				boolean isSuccessful = false;
 				for (int i = 0; i < nextAvailableNodes.size(); i++) {
 					if (nextAvailableNodes.get(i)) {
-						
-						// used for pruning by avoiding duplicate node expansion for empty processors
+
+						// used for pruning by avoiding duplicate node expansion
+						// for empty processors
 						boolean zeroChecked = false;
-						
+
 						for (int j = 1; j <= numProc; j++) {
-							
+
 							if (zeroChecked)
 								continue;
-							
-							// empty processors found, set zeroChecked to true and expand
+
+							// empty processors found, set zeroChecked to true
+							// and expand
 							if (procFinishTimes.get(j - 1).isEmpty())
 								zeroChecked = true;
-							
+
 							isSuccessful = buildTree(dag.get(i), j);
-							
+
 							if (isSuccessful)
 								break;
 						}
@@ -295,7 +304,7 @@ public class IDAStar implements Scheduler {
 
 				// set current node to available as we traverse back up
 				nextAvailableNodes.set(node.getIndex(), true);
-				
+
 				// subtract current idle time from total idle time
 				idleTime -= currentIdleTime;
 				return isSuccessful;
@@ -335,15 +344,13 @@ public class IDAStar implements Scheduler {
 
 		int procFinishTime;
 		if (!procFinishTimes.get(pNo - 1).isEmpty()) {
-			procFinishTime = procFinishTimes.get(pNo - 1).peek()
-					.getFinishTime();
+			procFinishTime = procFinishTimes.get(pNo - 1).peek().getFinishTime();
 		} else {
 			procFinishTime = 0;
 		}
 
 		// return the latest of the two times
-		return procFinishTime > parentFinishTime ? procFinishTime
-				: parentFinishTime;
+		return procFinishTime > parentFinishTime ? procFinishTime : parentFinishTime;
 
 	}
 
@@ -397,18 +404,18 @@ public class IDAStar implements Scheduler {
 		for (int i = 0; i < source.size(); i++) {
 			target.add(i, new Node(source.get(i)));
 		}
-		
+
 		for (int i = 0; i < source.size(); i++) {
-			for (Node parent: source.get(i).getParents().keySet()){
+			for (Node parent : source.get(i).getParents().keySet()) {
 				target.get(i).setParents(target.get(parent.getIndex()), source.get(i).getParents().get(parent));
 			}
-			
-			for (Node child: source.get(i).getChildren()){
+
+			for (Node child : source.get(i).getChildren()) {
 				target.get(i).setChildren(target.get(child.getIndex()));
 			}
 		}
 	}
-	
+
 	private void visualCopy(ArrayList<Node> target, ArrayList<Node> source) {
 		target.clear();
 		for (int i = 0; i < source.size(); i++) {
@@ -417,7 +424,7 @@ public class IDAStar implements Scheduler {
 				visualDag.updateProcGraph(source.get(i));
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -438,8 +445,8 @@ public class IDAStar implements Scheduler {
 		this.isVisual = true;
 		this.visualDag = visualDag;
 	}
-	
-	public Dag getDag(){
+
+	public Dag getDag() {
 		return visualDag;
 	}
 

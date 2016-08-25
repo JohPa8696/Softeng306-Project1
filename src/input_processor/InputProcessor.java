@@ -11,7 +11,7 @@ import utils.StringUtils;
 import node.Node;
 
 /**
- * 
+ * Input Processor class add extract information from input file and store it in a data structure supporting the IDAStar algorithm and output processor
  * @author John + Vincent
  */
 public class InputProcessor implements TaskReader {
@@ -27,9 +27,9 @@ public class InputProcessor implements TaskReader {
 	private ArrayList<Node> listOfNodes = new ArrayList<Node>();
 	// Array stores starting nodes
 	private ArrayList<Boolean> nextAvailableNodes = new ArrayList<Boolean>();/*
-																			 * COMMENT
-																			 * HERE
-																			 */
+																				 * COMMENT
+																				 * HERE
+																				 */
 
 	/**
 	 * Constructor also handle command line arguments
@@ -42,15 +42,13 @@ public class InputProcessor implements TaskReader {
 		if (new File(args[0]).isFile()) {
 			this.fileName = args[0];
 		} else {
-			throw new InvalidArgumentException("\nCannot find input file: "
-					+ args[0] + "!");
+			throw new InvalidArgumentException("\nCannot find input file: " + args[0] + "!");
 		}
 
 		if (StringUtils.isNumeric(args[1])) {
 			this.numProc = Integer.parseInt(args[1].trim());
 		} else {
-			throw new InvalidArgumentException("\n" + args[1]
-					+ " is not a valid number of processors!");
+			throw new InvalidArgumentException("\n" + args[1] + " is not a valid number of processors!");
 		}
 		// Loop through the rest of the command line arguments to get the
 		// optional arguments
@@ -76,9 +74,7 @@ public class InputProcessor implements TaskReader {
 
 				if (new File(outputFileName).isFile()) {
 					throw new InvalidArgumentException(
-							"\nFile's name "
-									+ outputFileName
-									+ " already exists.\nPlease choose a different name");
+							"\nFile's name " + outputFileName + " already exists.\nPlease choose a different name");
 				} else {
 					outputFileName = args[i + 1];
 					i++;
@@ -86,8 +82,7 @@ public class InputProcessor implements TaskReader {
 
 				// Violate command argument format, throw invalid exception
 			} else {
-				throw new InvalidArgumentException(
-						"\nInvalid command line argument: " + args[i]);
+				throw new InvalidArgumentException("\nInvalid command line argument: " + args[i]);
 			}
 		}
 	}
@@ -112,8 +107,7 @@ public class InputProcessor implements TaskReader {
 		while (scan.hasNext()) {
 			String line = scan.nextLine();
 			// Ignore lines that contain "{" or "}" characters
-			if (line.contains("{") || line.contains("}")
-					|| !line.contains("Weight=")) {
+			if (line.contains("{") || line.contains("}") || !line.contains("Weight=")) {
 				continue;
 			}
 			/* Split each line into parts by tab characters */
@@ -130,9 +124,7 @@ public class InputProcessor implements TaskReader {
 					} else if (!subString.contains(";")) {
 						name = subString.trim();
 					} else {
-						subString = subString.substring(
-								subString.lastIndexOf("=") + 1,
-								subString.lastIndexOf("]"));
+						subString = subString.substring(subString.lastIndexOf("=") + 1, subString.lastIndexOf("]"));
 						weight = Integer.parseInt(subString.trim());
 					}
 				}
@@ -162,14 +154,10 @@ public class InputProcessor implements TaskReader {
 					if (subString.equals("")) {
 						continue;
 					} else if (!subString.contains(";")) {
-						parentName = subString.substring(0,
-								subString.indexOf(">") - 2).trim();
-						childName = subString.substring(
-								parts[0].indexOf(">") + 1).trim();
+						parentName = subString.substring(0, subString.indexOf(">") - 2).trim();
+						childName = subString.substring(parts[0].indexOf(">") + 1).trim();
 					} else {// Get the cost of communication
-						subString = subString.substring(
-								subString.lastIndexOf("=") + 1,
-								subString.lastIndexOf("]"));
+						subString = subString.substring(subString.lastIndexOf("=") + 1, subString.lastIndexOf("]"));
 						weight = Integer.parseInt(subString.trim());
 					}
 				}
