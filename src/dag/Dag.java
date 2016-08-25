@@ -13,8 +13,10 @@ import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 
 /**
- * @author Jack Wong Create a DAG based on the input.dot file Create a processor
- *         graph after the scheduling finish library: GraphStream
+ * Create a DAG based on the input.dot file Create a processor graph after the
+ * scheduling finish library: GraphStream
+ * 
+ * @author Jack Wong
  * 
  */
 public class Dag implements ViewerListener {
@@ -31,9 +33,11 @@ public class Dag implements ViewerListener {
 	private boolean looped = true;
 
 	/**
+	 * Constructor
+	 * 
 	 * @param nodelist
 	 * @param numProc
-	 *            Constructor
+	 * 
 	 */
 	public Dag(ArrayList<Node> nodelist, int numProc) {
 		this.nodelist = nodelist;
@@ -44,14 +48,14 @@ public class Dag implements ViewerListener {
 		for (int i = 0; i < numProc; i++) {
 			procList.add(null);
 		}
-
 	}
 
 	/**
 	 * Create a visualized DAG graph and processor graph.
 	 */
 	public Graph createDag() {
-		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		System.setProperty("gs.ui.renderer",
+				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		g.addAttribute("ui.stylesheet", "url('resources/style.css')");
 
 		for (Node node : nodelist) {
@@ -65,12 +69,16 @@ public class Dag implements ViewerListener {
 				// System.out.println(node.getName() + " 's children is "
 				// +child.getName());
 				try {
-					g.addEdge(node.getName() + child.getName(), node.getName(), child.getName(), true);
-					g.getEdge(node.getName() + child.getName()).addAttribute("layout.weight", 3);
+					g.addEdge(node.getName() + child.getName(), node.getName(),
+							child.getName(), true);
+					g.getEdge(node.getName() + child.getName()).addAttribute(
+							"layout.weight", 3);
 				} catch (ElementNotFoundException e) {
 					g.addNode(child.getName());
-					g.addEdge(node.getName() + child.getName(), node.getName(), child.getName(), true);
-					g.getEdge(node.getName() + child.getName()).addAttribute("layout.weight", 2);
+					g.addEdge(node.getName() + child.getName(), node.getName(),
+							child.getName(), true);
+					g.getEdge(node.getName() + child.getName()).addAttribute(
+							"layout.weight", 2);
 				}
 			}
 		}
@@ -125,7 +133,8 @@ public class Dag implements ViewerListener {
 		org.graphstream.graph.Node graphnode = g.getNode(node.getName());
 		// graphnode.setAttribute("ui.color", color);
 		// graphnode.addAttribute("ui.class", "final");
-		graphnode.addAttribute("ui.label", node.getName() + "" + " P" + node.getProcessor());
+		graphnode.addAttribute("ui.label",
+				node.getName() + "" + " P" + node.getProcessor());
 
 	}
 
@@ -161,7 +170,8 @@ public class Dag implements ViewerListener {
 	}
 
 	public void unRoot(Node n) {
-		g.getNode(n.getName()).setAttribute("ui.style", "fill-color: white,black,yellow;");
+		g.getNode(n.getName()).setAttribute("ui.style",
+				"fill-color: white,black,yellow;");
 		g.getNode(n.getName()).setAttribute("ui.color", 0);
 	}
 
@@ -179,14 +189,16 @@ public class Dag implements ViewerListener {
 		// Store node name and starting time and finish time inside the node
 		proc_graph.getNode(name).addAttribute("ui.label", name);
 		proc_graph.getNode(name).setAttribute("Name", n.getName());
-		proc_graph.getNode(name).setAttribute("Time", "S:" + n.getStartTime() + " F:" + n.getFinishTime());
+		proc_graph.getNode(name).setAttribute("Time",
+				"S:" + n.getStartTime() + " F:" + n.getFinishTime());
 		proc_graph.getNode(name).setAttribute("Clicked", true);
 
 		// update node
 		if (procList.get(proc - 1) == null) {
 			try {
 				proc_graph.addEdge("P" + proc + name, "P" + proc, name, true);
-				proc_graph.getEdge("P" + n.getProcessor() + n.getName()).addAttribute("layout.weight", 4);
+				proc_graph.getEdge("P" + n.getProcessor() + n.getName())
+						.addAttribute("layout.weight", 4);
 			} catch (ElementNotFoundException e) {
 
 			}
@@ -194,7 +206,8 @@ public class Dag implements ViewerListener {
 		} else {
 			String fromName = procList.get(proc - 1).getName();
 			proc_graph.addEdge(fromName + name, fromName, name, true);
-			proc_graph.getEdge(fromName + name).addAttribute("layout.weight", 4);
+			proc_graph.getEdge(fromName + name)
+					.addAttribute("layout.weight", 4);
 		}
 		procList.set(proc - 1, n);
 	}
@@ -203,11 +216,13 @@ public class Dag implements ViewerListener {
 	public void buttonPushed(String id) {
 		try {
 			if ((boolean) proc_graph.getNode(id).getAttribute("Clicked")) {
-				proc_graph.getNode(id).addAttribute("ui.label", (Object) proc_graph.getNode(id).getAttribute("Time"));
+				proc_graph.getNode(id).addAttribute("ui.label",
+						(Object) proc_graph.getNode(id).getAttribute("Time"));
 				proc_graph.getNode(id).addAttribute("Clicked", false);
 
 			} else {
-				proc_graph.getNode(id).addAttribute("ui.label", (Object) proc_graph.getNode(id).getAttribute("Name"));
+				proc_graph.getNode(id).addAttribute("ui.label",
+						(Object) proc_graph.getNode(id).getAttribute("Name"));
 				proc_graph.getNode(id).addAttribute("Clicked", true);
 			}
 		} catch (NullPointerException e) {
