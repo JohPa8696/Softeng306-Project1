@@ -13,10 +13,7 @@ import utils.InvalidArgumentException;
 import input_processor.InputProcessor;
 import dag.Dag;
 
-import org.graphstream.ui.swingViewer.*;
 import org.graphstream.ui.view.*;
-import org.graphstream.graph.*;
-import org.graphstream.ui.*;
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,7 +28,6 @@ public class Main {
 			UnsupportedEncodingException, InvalidArgumentException {
 
 		ArrayList<JFrame> frames = new ArrayList<>();
-		long StartTime = System.currentTimeMillis();
 		Dag dag = null;
 		ArrayList<Node> list = new ArrayList<Node>();
 		ArrayList<Boolean> available;
@@ -47,7 +43,7 @@ public class Main {
 		// Sets up JFrames for visualization
 		if (ip.getVisualisation()) {
 			for (int i = 0; i < ip.getNumThread(); i++) {
-				frames.add(new JFrame("Running on processor: " + (i+1)));
+				frames.add(new JFrame("Running on processor: " + (i + 1)));
 				if (i > 0) {
 					frames.get(i).setLocation(
 							frames.get(i - 1).getX()
@@ -105,8 +101,6 @@ public class Main {
 				}
 			}
 		}
-		
-		long EndTime = System.currentTimeMillis();
 
 		// Create output file
 		if (ip.getOutputFileName() != null) {
@@ -124,7 +118,6 @@ public class Main {
 			s.getDag().createProcessorGraph();
 
 		}
-
 
 	}
 }
