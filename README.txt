@@ -31,6 +31,7 @@ Meeting Minutes     https://github.com/JohPa8696/Softeng306-Project1/wiki/Meetin
 Visualisation       https://github.com/JohPa8696/Softeng306-Project1/wiki/Visualization
 Plan                https://github.com/JohPa8696/Softeng306-Project1/wiki/Planning
 Issues              https://github.com/JohPa8696/Softeng306-Project1/issues
+Final jar file      https://github.com/JohPa8696/Softeng306-Project1/releases
 Research            https://www.youtube.com/watch?v=HhDhFsA3aro
                     https://www.youtube.com/watch?v=5LMXQ1NGHwU
                     https://researchspace.auckland.ac.nz/bitstream/handle/2292/5839/02whole.pdf?sequence=6
